@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EvalTrack — Admin / Dean Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="portal.css">
+  <link rel="icon" type="image/png" href="icon&logo/logo.png">
+</head>
+<body>
+<canvas id="particles"></canvas>
+
+<!-- ══ SIDEBAR ══ -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <img class="sidebar-logo-img" src="icon&logo/logo.png" alt="JMC">
+    <div>
+      <div class="sidebar-brand">EvalTrack</div>
+      <div class="sidebar-brand-sub">Dean / Admin Portal</div>
+    </div>
+  </div>
+  <div class="nav-group">
+    <div class="nav-group-label">Overview</div>
+    <button class="nav-link active" data-sec="dashboard"><span class="ni"><i class="fa fa-house"></i></span><span>Dashboard</span></button>
+    <button class="nav-link" data-sec="users"><span class="ni"><i class="fa fa-users"></i></span><span>User Administration</span></button>
+  </div>
+  <div class="nav-group">
+    <div class="nav-group-label">Academic</div>
+    <button class="nav-link" data-sec="reports"><span class="ni"><i class="fa fa-chart-bar"></i></span><span>Academic Reports</span></button>
+    <button class="nav-link" data-sec="messages"><span class="ni"><i class="fa fa-comments"></i></span><span>Program Head Comms</span></button>
+  </div>
+  <div class="nav-group">
+    <div class="nav-group-label">System</div>
+    <button class="nav-link" data-sec="system"><span class="ni"><i class="fa fa-server"></i></span><span>System Admin</span></button>
+  </div>
+  <div class="sidebar-footer">
+    <div class="sidebar-user-card">
+      <div class="user-avatar" id="user-avatar">A</div>
+      <div style="overflow:hidden;flex:1;">
+        <div class="user-name" id="sidebar-name">Loading...</div>
+        <div class="user-role">Dean / Administrator</div>
+      </div>
+    </div>
+    <button class="btn-signout" onclick="logout()"><i class="fa fa-right-from-bracket"></i> Sign Out</button>
+  </div>
+</aside>
+
+<!-- ══ TOPBAR ══ -->
+<header class="topbar">
+  <div class="topbar-left">
+    <button class="mob-toggle" id="mob-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')"><i class="fa fa-bars"></i></button>
+    <div class="topbar-breadcrumb">
+      <span class="topbar-crumb"><i class="fa fa-school"></i> JMC</span>
+      <i class="fa fa-chevron-right" style="font-size:9px;color:var(--g300);"></i>
+      <span class="topbar-page" id="topbar-title">Dashboard</span>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <div class="tb-pill"><span class="status-dot"></span><span id="tb-user">Loading</span></div>
+    <div class="tb-time" id="tb-clock"></div>
+  </div>
+</header>
+
+<!-- ══ MAIN ══ -->
+<main class="main-wrap">
+
+  <!-- 1. DASHBOARD -->
+  <section id="dashboard" class="section active">
+    <div class="ph">
+      <div>
+        <div class="ph-title">Dean AI Command Center</div>
+        <div class="ph-sub">Executive-level AI assistants for institutional strategy & management</div>
+      </div>
+    </div>
+
+    <!-- Stat strip (loaded dynamically) -->
+    <div class="stat-grid" id="admin-stats">
+      <div class="stat-card s-purple"><div class="stat-icon si-purple"><i class="fa fa-users"></i></div><div><div class="stat-val" id="s-total-users">—</div><div class="stat-lbl">Total Users</div></div></div>
+      <div class="stat-card s-teal"><div class="stat-icon si-teal"><i class="fa fa-graduation-cap"></i></div><div><div class="stat-val" id="s-total-students">—</div><div class="stat-lbl">Students</div></div></div>
+      <div class="stat-card s-mag"><div class="stat-icon si-red"><i class="fa fa-triangle-exclamation"></i></div><div><div class="stat-val" id="s-irregular">—</div><div class="stat-lbl">Irregular Students</div></div></div>
+      <div class="stat-card s-amber"><div class="stat-icon si-green"><i class="fa fa-chart-line"></i></div><div><div class="stat-val" id="s-evals">—</div><div class="stat-lbl">Evaluations</div></div></div>
+    </div>
+
+    <div class="tool-grid">
+      <div class="tool-card">
+        <div class="tool-icon ti-purple"><i class="fa fa-chess-king"></i></div>
+        <div class="tool-head">Academic Strategy</div>
+        <div class="tool-body">Simulate program expansion plans, improve enrollment retention, and project future KPIs.</div>
+        <button class="btn btn-primary" onclick="openAIChatbot('Strategy AI','Hello Dean. Are you looking to expand program offerings, improve student retention, or optimize the BSIT curriculum?')">
+          <i class="fa fa-lightbulb"></i> Strategy AI
+        </button>
+      </div>
+      <div class="tool-card">
+        <div class="tool-icon ti-amber"><i class="fa fa-calendar-check"></i></div>
+        <div class="tool-head">Meeting Scheduler</div>
+        <div class="tool-body">Coordinate meetings with Program Heads and faculty efficiently using AI scheduling.</div>
+        <button class="btn btn-primary" onclick="openAIChatbot('Schedule Manager','Hello Dean! Which Program Head or faculty member do you need to meet with? Tell me your available days and times.')">
+          <i class="fa fa-calendar"></i> Schedule Meeting
+        </button>
+      </div>
+      <div class="tool-card">
+        <div class="tool-icon ti-teal"><i class="fa fa-chart-pie"></i></div>
+        <div class="tool-head">KPI Tracker</div>
+        <div class="tool-body">Track institutional KPIs — passing rates, enrollment trends, and retention statistics.</div>
+        <button class="btn btn-primary" onclick="openAIChatbot('KPI Coach','Welcome, Dean. What metrics are you currently tracking for this semester? (e.g., passing rates, enrollment counts, irregular student reduction)')">
+          <i class="fa fa-target"></i> Track KPIs
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. USER ADMINISTRATION -->
+  <section id="users" class="section">
+    <div class="ph">
+      <div>
+        <div class="ph-title">User Management</div>
+        <div class="ph-sub">Manage all registered users across all roles</div>
+      </div>
+      <div class="ph-actions">
+        <span class="badge bg-purple" id="stat-total-users" style="padding:6px 14px;font-size:11px;">0 Users</span>
+      </div>
+    </div>
+
+    <div class="filter-bar">
+      <div class="field" style="flex:1;">
+        <div class="field-label">Search</div>
+        <input type="text" id="user-search" class="fc" placeholder="Search by name or ID...">
+      </div>
+      <div class="field">
+        <div class="field-label">Role Filter</div>
+        <select id="user-role-filter" class="fc">
+          <option value="">All Roles</option>
+          <option value="student">Students</option>
+          <option value="instructor">Instructors</option>
+          <option value="admin">Admins / Deans</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="card" style="padding:0;">
+      <div class="table-wrap">
+        <table id="user-table">
+          <thead><tr><th>ID</th><th>Full Name</th><th>Role</th><th>Program / Department</th><th>Status</th><th>Action</th></tr></thead>
+          <tbody id="user-body">
+            <tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--g400);"><i class="fa fa-spinner fa-spin"></i></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. REPORTS -->
+  <section id="reports" class="section">
+    <div class="ph">
+      <div class="ph-title">Academic Reporting</div>
+      <div class="ph-sub">Institutional overview of student standings and AI evaluation data</div>
+    </div>
+
+    <!-- STANDING -->
+    <div class="card" style="margin-bottom:16px;">
+      <div class="card-hd">
+        <div>
+          <div class="card-title"><i class="fa fa-users-viewfinder"></i> Student Academic Standing</div>
+          <div class="card-sub">Based on prerequisite compliance and grading history</div>
+        </div>
+        <span class="badge bg-red" id="stat-irregular-count">0 Irregular</span>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Student ID</th><th>Name</th><th>Program</th><th>Standing</th><th>Reason</th></tr></thead>
+          <tbody id="standing-body">
+            <tr><td colspan="5" style="text-align:center;padding:2rem;color:var(--g400);"><i class="fa fa-spinner fa-spin"></i></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- GRADE REPORTS -->
+    <div class="card">
+      <div class="card-hd">
+        <div>
+          <div class="card-title"><i class="fa fa-chart-bar"></i> Detailed Grade Reports</div>
+          <div class="card-sub">AI evaluation records synced by instructors</div>
+        </div>
+        <span class="badge bg-green" id="stat-processed-reports">0 Reports</span>
+      </div>
+
+      <div class="filter-bar" style="border:none;padding:0;box-shadow:none;margin-bottom:14px;background:none;">
+        <div class="field" style="flex:2;min-width:200px;">
+          <div class="field-label">Search</div>
+          <input type="text" id="report-search" class="fc" placeholder="Student name or subject...">
+        </div>
+        <div class="field">
+          <div class="field-label">Status Filter</div>
+          <select id="filter-status-rep" class="fc">
+            <option value="">All</option>
+            <option value="Passed">Passed</option>
+            <option value="Failed">Failed</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Student</th><th>Program</th><th>Subject</th><th>Status</th><th>Grade</th><th>AI Insight</th></tr></thead>
+          <tbody id="reports-body">
+            <tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--g400);"><i class="fa fa-spinner fa-spin"></i></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. MESSAGES -->
+  <section id="messages" class="section">
+    <div class="ph">
+      <div class="ph-title">Program Head Communications</div>
+      <div class="ph-sub">Real-time secured messaging with instructors and program heads</div>
+    </div>
+    <div id="advanced-chat-container"></div>
+  </section>
+
+  <!-- 5. SYSTEM ADMIN -->
+  <section id="system" class="section">
+    <div class="ph">
+      <div class="ph-title">System Administration</div>
+      <div class="ph-sub">Manage application data, backups, and maintenance</div>
+    </div>
+    <div class="card" style="max-width:560px;">
+      <div class="card-title"><i class="fa fa-shield-check"></i> System Health</div>
+      <div style="display:flex;align-items:center;gap:14px;padding:16px;background:rgba(16,185,129,.05);border:1px solid rgba(16,185,129,.2);border-radius:12px;margin:16px 0;">
+        <div class="stat-icon si-green"><i class="fa fa-check-circle"></i></div>
+        <div>
+          <div style="font-weight:700;color:var(--g800);">System Operational</div>
+          <div style="font-size:12px;color:var(--g400);margin-top:2px;">Local database responsive. All endpoints healthy.</div>
+        </div>
+      </div>
+      <div style="padding:16px;background:rgba(239,68,68,.04);border:1px solid rgba(239,68,68,.2);border-radius:12px;">
+        <div style="font-weight:700;color:var(--ember);margin-bottom:8px;font-size:13px;"><i class="fa fa-triangle-exclamation"></i> Danger Zone</div>
+        <p style="font-size:12px;color:var(--g400);margin-bottom:14px;line-height:1.7;">Wiping application data will permanently delete all student records, evaluations, grades, and sessions. This action is irreversible.</p>
+        <button class="btn btn-danger" id="btn-wipe-db" style="font-size:12px;">
+          <i class="fa fa-trash-can"></i> Wipe All Application Data
+        </button>
+      </div>
+    </div>
+  </section>
+
+</main>
+<div id="toast-container"></div>
+
+<!-- AI CHATBOT MODAL -->
+<div class="chat-overlay" id="ai-chatbot-overlay">
+  <div class="chat-modal-box">
+    <div class="chat-modal-header">
+      <div class="chat-modal-title">
+        <i class="fa fa-robot"></i>
+        <span id="chatbot-title">AI Assistant</span>
+        <span class="ai-dot"></span>
+      </div>
+      <button class="chat-modal-close" onclick="document.getElementById('ai-chatbot-overlay').style.display='none'"><i class="fa fa-times"></i></button>
+    </div>
+    <div class="chat-modal-msgs" id="chatbot-messages"></div>
+    <div class="chat-modal-input-row">
+      <input type="text" id="chatbot-input" class="fc" style="flex:1;" placeholder="Ask anything...">
+      <button class="btn btn-primary" id="chatbot-send-btn" style="padding:9px 16px;"><i class="fa fa-paper-plane"></i></button>
+    </div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+<script>
+const PAGE_TITLES = { dashboard:'Dashboard', users:'User Administration', reports:'Academic Reports', messages:'Program Head Comms', system:'System Admin' };
+
+function startClock() {
+  function tick() { document.getElementById('tb-clock').textContent = new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'}); }
+  tick(); setInterval(tick, 1000);
+}
+
+window.showToast = function(msg, type='info') {
+  const c = document.getElementById('toast-container');
+  const d = document.createElement('div'); d.className=`toast-item ${type}`;
+  const icons={success:'fa-check-circle',error:'fa-times-circle',warning:'fa-triangle-exclamation',info:'fa-circle-info'};
+  d.innerHTML=`<i class="fa ${icons[type]||icons.info}"></i>${msg}`;
+  c.appendChild(d);
+  setTimeout(()=>{d.style.opacity='0';d.style.transform='translateX(20px)';d.style.transition='all .3s';setTimeout(()=>d.remove(),300);},3000);
+};
+
+document.querySelectorAll('.nav-link[data-sec]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const sec = btn.dataset.sec;
+    document.querySelectorAll('.nav-link').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(sec)?.classList.add('active');
+    document.getElementById('topbar-title').textContent = PAGE_TITLES[sec]||sec;
+    if(window.innerWidth<=768) document.getElementById('sidebar').classList.remove('open');
+  });
+});
+
+// AI Chatbot
+window.openAIChatbot = function(title, intro) {
+  document.getElementById('chatbot-title').textContent = title;
+  window._chatbotTopic = title;
+  document.getElementById('ai-chatbot-overlay').style.display = 'flex';
+  document.getElementById('chatbot-messages').innerHTML = '';
+  addBubble(intro||'Hello!','bot');
+  document.getElementById('chatbot-input').focus();
+};
+function addBubble(text, sender, id=null) {
+  const area = document.getElementById('chatbot-messages'); if(!area) return;
+  const wrap = document.createElement('div');
+  wrap.style.cssText=`display:flex;flex-direction:column;align-items:${sender==='user'?'flex-end':'flex-start'};`;
+  const b = document.createElement('div'); if(id) b.id=id;
+  b.className = sender==='user' ? 'cbot-bubble-user' : 'cbot-bubble-bot';
+  b.innerHTML = sender==='bot' ? `<strong><i class="fa fa-robot"></i> EvalTrack AI</strong>${String(text||'...').replace(/\n/g,'<br>')}` : String(text||'').replace(/\n/g,'<br>');
+  wrap.appendChild(b); area.appendChild(wrap); area.scrollTop=area.scrollHeight;
+}
+function sendChat() {
+  const inp = document.getElementById('chatbot-input');
+  const txt = inp.value.trim(); if(!txt) return;
+  addBubble(txt,'user'); inp.value='';
+  const tid='cb'+Date.now();
+  addBubble('<span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span>','bot',tid);
+  fetch('ai_chat_handler.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({topic:window._chatbotTopic||'General',query:txt})})
+    .then(r=>r.json())
+    .then(d=>{const b=document.getElementById(tid);if(b)b.innerHTML=`<strong><i class="fa fa-robot"></i> EvalTrack AI</strong>${String(d.reply||'').replace(/\n/g,'<br>')}`;document.getElementById('chatbot-messages').scrollTop=99999;})
+    .catch(()=>{const b=document.getElementById(tid);if(b)b.innerHTML='<strong><i class="fa fa-exclamation-circle"></i> Error</strong>Could not connect. Check XAMPP internet.';});
+}
+document.getElementById('chatbot-send-btn').addEventListener('click', sendChat);
+document.getElementById('chatbot-input').addEventListener('keypress', e=>{if(e.key==='Enter') sendChat();});
+document.getElementById('ai-chatbot-overlay').addEventListener('click', e=>{if(e.target===document.getElementById('ai-chatbot-overlay'))document.getElementById('ai-chatbot-overlay').style.display='none';});
+
+document.addEventListener('DOMContentLoaded', async () => {
+  startClock();
+  const user = checkAuth(['admin']);
+  if (!user) return;
+
+  document.getElementById('sidebar-name').textContent = user.name;
+  document.getElementById('tb-user').textContent = user.name;
+  document.getElementById('user-avatar').textContent = user.name?.charAt(0)?.toUpperCase()||'A';
+
+  initAdvancedChat('advanced-chat-container', user);
+
+  // LOAD ALL DATA IN PARALLEL
+  try {
+    const [usersR, evalsR, standingR] = await Promise.all([
+      fetch('get_users.php').then(r=>r.json()),
+      fetch('get_evaluations.php').then(r=>r.json()),
+      fetch('get_standing.php').then(r=>r.json())
+    ]);
+
+    // STATS
+    const students = usersR.filter(u=>u.role==='student');
+    document.getElementById('s-total-users').textContent = usersR.length;
+    document.getElementById('s-total-students').textContent = students.length;
+    document.getElementById('s-evals').textContent = evalsR.length;
+    const irregCount = standingR.filter(s=>s.standing==='Irregular').length;
+    document.getElementById('s-irregular').textContent = irregCount;
+    document.getElementById('stat-total-users').textContent = `${usersR.length} Users`;
+    document.getElementById('stat-irregular-count').textContent = `${irregCount} Irregular`;
+    document.getElementById('stat-processed-reports').textContent = `${evalsR.length} Reports`;
+
+    // USERS TABLE
+    let allUsers = usersR;
+    function renderUsers(search='', roleFilter='') {
+      const tbody = document.getElementById('user-body'); tbody.innerHTML='';
+      const filtered = allUsers.filter(u =>
+        (!search || u.name.toLowerCase().includes(search)||String(u.id).toLowerCase().includes(search)) &&
+        (!roleFilter || u.role===roleFilter)
+      );
+      if (!filtered.length) { tbody.innerHTML='<tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--g400);">No users found.</td></tr>'; return; }
+      filtered.forEach(u => {
+        const roleColors = {admin:'bg-green',instructor:'bg-amber',student:'bg-purple'};
+        const tr = document.createElement('tr');
+        tr.innerHTML=`
+          <td><code style="font-size:11px;background:var(--g100);padding:3px 7px;border-radius:5px;">${u.id}</code></td>
+          <td><strong>${u.name}</strong></td>
+          <td><span class="badge ${roleColors[u.role]||'bg-gray'}">${u.role.toUpperCase()}</span></td>
+          <td style="color:var(--g400);font-size:12.5px;">${u.program||u.email||'—'}</td>
+          <td><span class="badge ${u.status==='Active'?'bg-green':'bg-gray'}">${u.status||'Active'}</span></td>
+          <td><button class="btn btn-danger-soft btn-xs" onclick="deleteUser('${u.id}')" ${u.id===user.id?'disabled':''} title="Delete user"><i class="fa fa-trash"></i></button></td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+    renderUsers();
+    document.getElementById('user-search').addEventListener('input', function() { renderUsers(this.value.toLowerCase(), document.getElementById('user-role-filter').value); });
+    document.getElementById('user-role-filter').addEventListener('change', function() { renderUsers(document.getElementById('user-search').value.toLowerCase(), this.value); });
+
+    window.deleteUser = async function(id) {
+      if (!confirm('Permanently delete this user? This cannot be undone.')) return;
+      const fd = new FormData(); fd.append('id', id);
+      try {
+        const r = await fetch('delete_user.php',{method:'POST',body:fd});
+        const res = await r.json();
+        if (res.success) { showToast('User deleted.','success'); allUsers=allUsers.filter(u=>u.id!==id); renderUsers(); }
+        else showToast(res.message||'Failed.','error');
+      } catch(e) { showToast('Network error.','error'); }
+    };
+
+    // STANDING TABLE
+    const stBody = document.getElementById('standing-body'); stBody.innerHTML='';
+    standingR.forEach(s => {
+      const tr = document.createElement('tr');
+      const isReg = s.standing==='Regular';
+      tr.innerHTML=`
+        <td><code style="font-size:11px;background:var(--g100);padding:3px 7px;border-radius:5px;">${s.id}</code></td>
+        <td><strong>${s.name}</strong></td>
+        <td>${s.program||'BSIT'}</td>
+        <td><span class="badge ${isReg?'bg-green':'bg-red'}">${s.standing||'—'}</span></td>
+        <td style="font-size:12px;color:var(--g400);">${s.reason||'—'}</td>
+      `;
+      stBody.appendChild(tr);
+    });
+
+    // REPORTS TABLE
+    let allEvals = evalsR;
+    function renderReports(search='', statusFilter='') {
+      const tbody = document.getElementById('reports-body'); tbody.innerHTML='';
+      const filtered = allEvals.filter(e =>
+        (!search || e.student_name.toLowerCase().includes(search)||e.subject_code.toLowerCase().includes(search)) &&
+        (!statusFilter || e.status===statusFilter)
+      );
+      if (!filtered.length) { tbody.innerHTML='<tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--g400);">No matching records.</td></tr>'; return; }
+      filtered.forEach(e => {
+        const pass = parseFloat(e.grade)>=75;
+        const tr = document.createElement('tr');
+        tr.innerHTML=`
+          <td><strong>${e.student_name}</strong><br><span style="font-size:10.5px;color:var(--g400);">${e.student_id}</span></td>
+          <td><span style="font-size:12.5px;color:var(--g500);">${e.program||'BSIT'}</span></td>
+          <td><strong>${e.subject_code}</strong></td>
+          <td><span class="badge ${pass?'bg-green':'bg-red'}">${e.status||'—'}</span></td>
+          <td style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:900;font-size:16px;color:${pass?'var(--g800)':'var(--ember)'};">${e.grade}</td>
+          <td><div style="font-size:12.5px;background:linear-gradient(135deg, rgba(124,58,237,0.05), rgba(124,58,237,0.01));padding:10px 14px;border-radius:10px;border:1px solid rgba(124,58,237,0.15);max-width:280px;line-height:1.5;color:var(--g700);"><div style="font-size:9.5px;font-weight:800;color:var(--p500);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:4px;"><i class="fa fa-sparkles"></i> AI Insight</div>${e.ai_insight||'<span style="color:var(--g400);font-style:italic;">No feedback generated.</span>'}</div></td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+    renderReports();
+    document.getElementById('report-search').addEventListener('input', function() { renderReports(this.value.toLowerCase(), document.getElementById('filter-status-rep').value); });
+    document.getElementById('filter-status-rep').addEventListener('change', function() { renderReports(document.getElementById('report-search').value.toLowerCase(), this.value); });
+
+  } catch(e) {
+    console.error('Admin data load error:', e);
+    showToast('Failed to load some data. Check XAMPP.', 'error');
+  }
+
+  // SYSTEM WIPE
+  document.getElementById('btn-wipe-db').addEventListener('click', () => {
+    if (confirm('⚠️ This will PERMANENTLY DELETE all application data. Are you absolutely sure?')) {
+      if (confirm('Last confirmation: This action is IRREVERSIBLE. Proceed?')) {
+        localStorage.clear(); sessionStorage.clear();
+        showToast('System wiped. Redirecting...', 'error');
+        setTimeout(() => window.location.href='login.html', 2000);
+      }
+    }
+  });
+});
+</script>
+</body>
+</html>

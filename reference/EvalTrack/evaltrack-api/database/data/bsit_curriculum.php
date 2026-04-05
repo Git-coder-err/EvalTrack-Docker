@@ -1,0 +1,116 @@
+<?php
+
+/**
+ * Official JMC BSIT curriculum (2022–2023) — EvalTrack v4.0.
+ * semester: 1 = first, 2 = second, 3 = summer (year 3 only)
+ * Third Year Standing for CAP 101 / SP 101 is enforced in EvaluationEngine (not stored here).
+ */
+
+return [
+    'subjects' => [
+        // First year — first semester (27.0)
+        ['code' => 'GE 10', 'title' => 'Environmental Science', 'units' => 3, 'year_level' => 1, 'semester' => 1, 'trm' => 1],
+        ['code' => 'GE 11', 'title' => 'The Entrepreneurial Mind', 'units' => 3, 'year_level' => 1, 'semester' => 1, 'trm' => 1],
+        ['code' => 'GE 4', 'title' => 'Readings in the Philippine History', 'units' => 3, 'year_level' => 1, 'semester' => 1, 'trm' => 1],
+        ['code' => 'GE 5', 'title' => 'The Contemporary World', 'units' => 3, 'year_level' => 1, 'semester' => 1, 'trm' => 1],
+        ['code' => 'GE 9', 'title' => 'Life and Works of Rizal', 'units' => 3, 'year_level' => 1, 'semester' => 1, 'trm' => 1],
+        ['code' => 'IT 101', 'title' => 'Introduction to Computing', 'units' => 3, 'year_level' => 1, 'semester' => 1, 'trm' => 1],
+        ['code' => 'IT 102', 'title' => 'Computer Programming 1', 'units' => 3, 'year_level' => 1, 'semester' => 1, 'trm' => 1],
+        ['code' => 'NSTP 1', 'title' => 'National Service Training Program I', 'units' => 3, 'year_level' => 1, 'semester' => 1, 'trm' => 1],
+        ['code' => 'PE 1', 'title' => 'Physical Education 1', 'units' => 2, 'year_level' => 1, 'semester' => 1, 'trm' => 1],
+        ['code' => 'SF 1', 'title' => 'Student Formation 1', 'units' => 1, 'year_level' => 1, 'semester' => 1, 'trm' => 1],
+        // First year — second semester (24.0)
+        ['code' => 'GE 1', 'title' => 'Understanding the Self', 'units' => 3, 'year_level' => 1, 'semester' => 2, 'trm' => 1],
+        ['code' => 'GE 2', 'title' => 'Mathematics in the Modern World', 'units' => 3, 'year_level' => 1, 'semester' => 2, 'trm' => 1],
+        ['code' => 'GE 3', 'title' => 'Purposive Communication', 'units' => 3, 'year_level' => 1, 'semester' => 2, 'trm' => 1],
+        ['code' => 'IT 103', 'title' => 'Computer Programming 2', 'units' => 3, 'year_level' => 1, 'semester' => 2, 'trm' => 1],
+        ['code' => 'IT 104', 'title' => 'Introduction to Human Computer Interaction', 'units' => 3, 'year_level' => 1, 'semester' => 2, 'trm' => 1],
+        ['code' => 'IT 105', 'title' => 'Discrete Mathematics 1', 'units' => 3, 'year_level' => 1, 'semester' => 2, 'trm' => 1],
+        ['code' => 'NSTP 2', 'title' => 'National Service Training Program II', 'units' => 3, 'year_level' => 1, 'semester' => 2, 'trm' => 1],
+        ['code' => 'PE 2', 'title' => 'Physical Education 2', 'units' => 2, 'year_level' => 1, 'semester' => 2, 'trm' => 1],
+        ['code' => 'SF 2', 'title' => 'Student Formation 2', 'units' => 1, 'year_level' => 1, 'semester' => 2, 'trm' => 1],
+        // Second year — first semester (24.0)
+        ['code' => 'GE 6', 'title' => 'Art Appreciation', 'units' => 3, 'year_level' => 2, 'semester' => 1, 'trm' => 1],
+        ['code' => 'GE 7', 'title' => 'Science, Technology and Society', 'units' => 3, 'year_level' => 2, 'semester' => 1, 'trm' => 1],
+        ['code' => 'GE 8', 'title' => 'Ethics', 'units' => 3, 'year_level' => 2, 'semester' => 1, 'trm' => 1],
+        ['code' => 'IT 201', 'title' => 'Data Structures and Algorithms', 'units' => 3, 'year_level' => 2, 'semester' => 1, 'trm' => 1],
+        ['code' => 'IT 202', 'title' => 'Networking 1', 'units' => 3, 'year_level' => 2, 'semester' => 1, 'trm' => 1],
+        ['code' => 'IT ELECT 1', 'title' => 'Object Oriented Programming', 'units' => 3, 'year_level' => 2, 'semester' => 1, 'trm' => 1],
+        ['code' => 'IT ELECT 2', 'title' => 'Platform Technologies', 'units' => 3, 'year_level' => 2, 'semester' => 1, 'trm' => 1],
+        ['code' => 'PE 3', 'title' => 'Physical Education 3', 'units' => 2, 'year_level' => 2, 'semester' => 1, 'trm' => 1],
+        ['code' => 'SF 3', 'title' => 'Student Formation 3', 'units' => 1, 'year_level' => 2, 'semester' => 1, 'trm' => 1],
+        // Second year — second semester (21.0)
+        ['code' => 'IT 203', 'title' => 'Information Management', 'units' => 3, 'year_level' => 2, 'semester' => 2, 'trm' => 1],
+        ['code' => 'IT 204', 'title' => 'Quantitative Methods (Incl. Modeling & Simulation)', 'units' => 3, 'year_level' => 2, 'semester' => 2, 'trm' => 1],
+        ['code' => 'IT 205', 'title' => 'Integrative Programming & Technologies', 'units' => 3, 'year_level' => 2, 'semester' => 2, 'trm' => 1],
+        ['code' => 'IT 206', 'title' => 'Networking 2', 'units' => 3, 'year_level' => 2, 'semester' => 2, 'trm' => 1],
+        ['code' => 'IT 207', 'title' => 'Multimedia', 'units' => 3, 'year_level' => 2, 'semester' => 2, 'trm' => 1],
+        ['code' => 'IT ELECT 3', 'title' => 'Web Systems and Technologies 1', 'units' => 3, 'year_level' => 2, 'semester' => 2, 'trm' => 1],
+        ['code' => 'PE 4', 'title' => 'Physical Education 4', 'units' => 3, 'year_level' => 2, 'semester' => 2, 'trm' => 1],
+        ['code' => 'SF 4', 'title' => 'Student Formation 4', 'units' => 1, 'year_level' => 2, 'semester' => 2, 'trm' => 1],
+        // Third year — first semester (25.0)
+        ['code' => 'GE 12', 'title' => 'Reading Visual Art', 'units' => 3, 'year_level' => 3, 'semester' => 1, 'trm' => 1],
+        ['code' => 'IT 301', 'title' => 'Advanced Database Systems', 'units' => 3, 'year_level' => 3, 'semester' => 1, 'trm' => 1],
+        ['code' => 'IT 302', 'title' => 'System Integration and Architecture', 'units' => 3, 'year_level' => 3, 'semester' => 1, 'trm' => 1],
+        ['code' => 'IT 303', 'title' => 'Event-Driven Programming', 'units' => 3, 'year_level' => 3, 'semester' => 1, 'trm' => 1],
+        ['code' => 'IT 304', 'title' => 'Information Assurance and Security 1', 'units' => 3, 'year_level' => 3, 'semester' => 1, 'trm' => 1],
+        ['code' => 'IT 305', 'title' => 'Mobile Application Development', 'units' => 3, 'year_level' => 3, 'semester' => 1, 'trm' => 1],
+        ['code' => 'IT 306', 'title' => 'Game Development', 'units' => 3, 'year_level' => 3, 'semester' => 1, 'trm' => 1],
+        ['code' => 'IT 307', 'title' => 'Web Systems and Technologies 2', 'units' => 3, 'year_level' => 3, 'semester' => 1, 'trm' => 1],
+        ['code' => 'SF 5', 'title' => 'Student Formation 5', 'units' => 1, 'year_level' => 3, 'semester' => 1, 'trm' => 1],
+        // Third year — second semester (19.0)
+        ['code' => 'IT 308', 'title' => 'Information Assurance and Security 2', 'units' => 3, 'year_level' => 3, 'semester' => 2, 'trm' => 1],
+        ['code' => 'IT 309', 'title' => 'Application Development and Emerging Technologies', 'units' => 3, 'year_level' => 3, 'semester' => 2, 'trm' => 1],
+        ['code' => 'IT 310', 'title' => 'Data Science and Analytics', 'units' => 3, 'year_level' => 3, 'semester' => 2, 'trm' => 1],
+        ['code' => 'IT 311', 'title' => 'Technopreneurship', 'units' => 3, 'year_level' => 3, 'semester' => 2, 'trm' => 1],
+        ['code' => 'IT 312', 'title' => 'Embedded Systems', 'units' => 3, 'year_level' => 3, 'semester' => 2, 'trm' => 1],
+        ['code' => 'IT ELECT 4', 'title' => 'System Integration and Architecture 2', 'units' => 3, 'year_level' => 3, 'semester' => 2, 'trm' => 1],
+        ['code' => 'SF 6', 'title' => 'Student Formation 6', 'units' => 1, 'year_level' => 3, 'semester' => 2, 'trm' => 1],
+        // Summer (6.0)
+        ['code' => 'CAP 101', 'title' => 'Capstone Project and Research 1', 'units' => 3, 'year_level' => 3, 'semester' => 3, 'trm' => 1],
+        ['code' => 'SP 101', 'title' => 'Social and Professional Issues', 'units' => 3, 'year_level' => 3, 'semester' => 3, 'trm' => 1],
+        // Fourth year — first semester (9.0)
+        ['code' => 'CAP 102', 'title' => 'Capstone Project and Research 2', 'units' => 3, 'year_level' => 4, 'semester' => 1, 'trm' => 1],
+        ['code' => 'IT 401', 'title' => 'Systems Administration and Maintenance', 'units' => 3, 'year_level' => 4, 'semester' => 1, 'trm' => 1],
+        ['code' => 'SWT 101', 'title' => 'ICT Seminar & Workshop', 'units' => 3, 'year_level' => 4, 'semester' => 1, 'trm' => 1],
+        // Fourth year — second semester (6.0)
+        ['code' => 'PRAC 101', 'title' => 'PRACTICUM (486 HOURS)', 'units' => 6, 'year_level' => 4, 'semester' => 2, 'trm' => 1],
+    ],
+
+    'prerequisites' => [
+        ['IT 103', 'IT 102'],
+        ['IT 104', 'IT 101'],
+        ['IT 105', 'IT 102'],
+        ['NSTP 2', 'NSTP 1'],
+        ['PE 2', 'PE 1'],
+        ['SF 2', 'SF 1'],
+        ['IT 201', 'IT 103'],
+        ['IT 202', 'IT 101'],
+        ['IT ELECT 1', 'IT 103'],
+        ['IT ELECT 2', 'IT 101'],
+        ['PE 3', 'PE 2'],
+        ['SF 3', 'SF 2'],
+        ['IT 206', 'IT 103'],
+        ['IT 207', 'IT 101'],
+        ['IT ELECT 3', 'IT 103'],
+        ['PE 4', 'PE 3'],
+        ['SF 4', 'SF 3'],
+        ['IT 301', 'IT 203'],
+        ['IT 302', 'IT 203'],
+        ['IT 303', 'IT 203'],
+        ['IT 304', 'IT 205'],
+        ['IT 305', 'IT 206'],
+        ['IT 306', 'IT 205'],
+        ['SF 5', 'SF 4'],
+        ['IT 308', 'IT 304'],
+        ['IT 309', 'IT 303'],
+        ['IT 310', 'IT 301'],
+        ['IT 312', 'IT 303'],
+        ['IT ELECT 4', 'IT 302'],
+        ['SF 6', 'SF 5'],
+        ['CAP 102', 'CAP 101'],
+        ['IT 401', 'IT 308'],
+        ['PRAC 101', 'CAP 101'],
+        ['PRAC 101', 'IT 308'],
+    ],
+];

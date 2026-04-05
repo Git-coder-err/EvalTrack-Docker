@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | EvalTrack</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="icon" type="image/png" href="icon&logo/logo.png">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body style="display: flex; align-items: center; justify-content: center; min-height: 100vh;">
+    <canvas id="particles"></canvas>
+
+    <div class="auth-container"
+        style="flex-direction: row; width: 850px; max-width: 95%; min-height: 480px; box-shadow: 0 15px 35px rgba(0,0,0,0.15); border-radius: 20px; overflow: hidden; position: relative; z-index: 10;">
+        <!-- Left Side -->
+        <div
+            style="flex: 1; background: var(--primary); color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2.5rem; text-align: center;">
+            <img src="icon&logo/logo.png" alt="Jose Maria College Logo"
+                style="width: 140px; margin-bottom: 1.5rem;">
+            <p style="font-size: 1.1rem; line-height: 1.6; font-weight: 500;">Jose Maria College<br>Foundation, Inc.</p>
+        </div>
+
+        <!-- Right Side -->
+        <div
+            style="flex: 1.3; padding: 4rem; display: flex; flex-direction: column; justify-content: center; background: #E6DEEC;">
+            <div style="text-align: center; margin-bottom: 2rem;">
+                <h2 style="font-size: 1.8rem; color: var(--primary-dark); margin-bottom: 0.5rem; font-weight: 700;">User
+                    Login</h2>
+                <p style="color: var(--muted); font-size: 0.95rem;">Access your academic portal securely</p>
+            </div>
+
+            <form id="loginForm">
+                <div style="margin-bottom: 1.5rem;">
+                    <input type="text" id="email" placeholder="Username" required
+                        style="width: 100%; padding: 1rem 1.5rem; border: none; border-radius: 50px; font-size: 1rem; color: var(--text-dark); background: white; outline: none; box-shadow: 0 2px 10px rgba(0,0,0,0.02); font-family: 'Inter', sans-serif;">
+                </div>
+
+                <div style="margin-bottom: 1.5rem; position: relative;">
+                    <input type="password" id="password" placeholder="Password" required
+                        style="width: 100%; padding: 1rem 1.5rem; border: none; border-radius: 50px; font-size: 1rem; color: var(--text-dark); background: white; outline: none; box-shadow: 0 2px 10px rgba(0,0,0,0.02); font-family: 'Inter', sans-serif;">
+                    <i class="fa fa-eye-slash" id="togglePassword"
+                        style="position: absolute; right: 1.5rem; top: 1.1rem; color: var(--primary); font-size: 1.1rem; cursor: pointer; transition: 0.3s;"></i>
+                </div>
+
+                <div
+                    style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; font-size: 0.85rem;">
+                    <label
+                        style="display: flex; align-items: center; gap: 0.4rem; color: var(--text-dark); cursor: pointer; font-weight: 500;">
+                        <input type="checkbox" style="accent-color: var(--primary);"> Remember me
+                    </label>
+                    <a href="#" style="color: var(--primary); text-decoration: none; font-weight: 500;"
+                        onclick="showToast('Please contact Admin to reset password.', 'info');">Forgot password?</a>
+                </div>
+
+                <button type="submit"
+                    style="width: 100%; padding: 1rem; font-size: 1rem; font-weight: 700; color: white; background: var(--primary); border: none; border-radius: 50px; cursor: pointer; transition: 0.3s;"
+                    id="login-submit-btn" onmouseover="this.style.filter='brightness(1.1)'"
+                    onmouseout="this.style.filter='brightness(1)'">
+                    Login
+                </button>
+
+                <p style="text-align: center; margin-top: 1.5rem; font-size: 0.9rem; color: var(--muted);">
+                    Don't have an account? <a href="register.html"
+                        style="color: var(--primary); font-weight: 600; text-decoration: none;">Register here</a>
+                </p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check session (Using sessionStorage so you can login with another role in a new tab)
+            const loggedUser = sessionStorage.getItem('currentUser');
+            if (loggedUser) {
+                const u = JSON.parse(loggedUser);
+                window.location.href = `${u.role}.html`;
+            }
+
+            // Password Toggle
+            const togglePassword = document.getElementById("togglePassword");
+            const password = document.getElementById("password");
+
+            togglePassword.addEventListener("click", function () {
+                const type = password.type === "password" ? "text" : "password";
+                password.type = type;
+                this.classList.toggle("fa-eye");
+                this.classList.toggle("fa-eye-slash");
+            });
+
+            // Login Submit
+            document.getElementById('loginForm').addEventListener('submit', async function (e) {
+                e.preventDefault();
+
+                const btn = document.getElementById('login-submit-btn');
+                const origHtml = btn.innerHTML;
+                btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Authenticating...';
+                btn.disabled = true;
+
+                const email = document.getElementById('email').value.trim();
+                const pass = document.getElementById('password').value;
+
+                // Call the async login function
+                const result = await login(email, pass);
+
+                if (result.success) {
+                    showToast(`Welcome back, ${result.user.name.split(' ')[0]}!`, 'success');
+                    // Logic is handled inside the login() function in app.js
+                } else {
+                    showToast(result.message, 'error');
+                    btn.innerHTML = origHtml;
+                    btn.disabled = false;
+                    document.getElementById('password').value = '';
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

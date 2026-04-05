@@ -37,3 +37,11 @@ data/
 .cache/
 .temp/
 *.tmp
+
+# Secrets and credentials
+firebase-service-account.json
+*service-account*.json
+*secrets*.js
+groq-rotator.js
+*.key
+*.pem

@@ -1,0 +1,61 @@
+type Organization @table {
+  name: String!
+  industry: String
+  contactEmail: String
+  createdAt: Timestamp!
+}
+
+type User @table {
+  organization: Organization!
+  email: String!
+  displayName: String!
+  role: String!
+  department: String
+  position: String
+  manager: User
+  createdAt: Timestamp!
+}
+
+type EvaluationCycle @table {
+  organization: Organization!
+  name: String!
+  description: String
+  startDate: Date!
+  endDate: Date!
+  createdAt: Timestamp!
+}
+
+type EvaluationForm @table {
+  organization: Organization!
+  name: String!
+  description: String
+  createdAt: Timestamp!
+}
+
+type EvaluationQuestion @table {
+  evaluationForm: EvaluationForm!
+  questionText: String!
+  questionType: String!
+  options: [String]
+  order: Int!
+}
+
+type EvaluationInstance @table {
+  assignee: User!
+  evaluationForm: EvaluationForm!
+  evaluationCycle: EvaluationCycle!
+  status: String!
+  employeeSelfAssessment: String
+  managerFeedback: String
+  createdAt: Timestamp!
+}
+
+type Goal @table {
+  user: User!
+  goalText: String!
+  description: String
+  status: String!
+  targetDate: Date!
+  progressNotes: String
+  createdAt: Timestamp!
+}

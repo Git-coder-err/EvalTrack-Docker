@@ -1,0 +1,42 @@
+# 1. Get all Evaluation Cycles for an Organization
+query GetOrganizationEvaluationCycles($organizationId: UUID!) @auth(level: USER, insecureReason: "This operation is safe to expose to all logged in users. Access to specific organizations would be handled by backend logic if needed beyond basic auth.") {
+  evaluationCycles(where: {organizationId: {eq: $organizationId}}) {
+    id
+    name
+    description
+    startDate
+    endDate
+    createdAt
+  }
+}
+
+# 2. Create a new Goal for a User
+mutation CreateUserGoal($goalText: String!, $description: String, $status: String!, $targetDate: Date!) @auth(level: USER) {
+  goal_insert(data: {
+    userId_expr: "auth.uid",
+    goalText: $goalText,
+    description: $description,
+    status: $status,
+    targetDate: $targetDate,
+    createdAt_expr: "request.time"
+  })
+}
+
+# 3. Update an Evaluation Instance's Status
+mutation UpdateEvaluationInstanceStatus($instanceId: UUID!, $newStatus: String!) @auth(level: USER) {
+  evaluationInstance_update(key: {id: $instanceId}, data: {
+    status: $newStatus
+  })
+}
+
+# 4. Get a User's Goals
+query GetMyGoals @auth(level: USER) {
+  goals(where: {userId_expr: "auth.uid"}) {
+    id
+    goalText
+    status
+    targetDate
+    progressNotes
+    createdAt
+  }
+}

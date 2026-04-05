@@ -1,0 +1,30 @@
+connectorId: example
+generate:
+  dartSdk:
+    - outputDir: ..\..\EvalTrack_Flutter\lib\dataconnect_generated
+      package: dataconnect_generated/generated.dart
+  javascriptSdk:
+    - outputDir: ..\..\src\dataconnect-generated
+      package: "@dataconnect/generated"
+      packageJsonDir: ..\..
+      react: false
+      angular: false
+    - outputDir: ..\..\EvalTrack_System\client\src\dataconnect-generated
+      package: "@dataconnect/generated"
+      packageJsonDir: ..\..\EvalTrack_System\client
+      react: true
+      angular: false
+    - outputDir: ..\..\reference\EvalTrack\evaltrack-web\src\dataconnect-generated
+      package: "@dataconnect/generated"
+      packageJsonDir: ..\..\reference\EvalTrack\evaltrack-web
+      react: false
+      angular: false
+    - outputDir: ..\..\reference\EvalTrack\evaltrack-api\src\dataconnect-generated
+      package: "@dataconnect/generated"
+      packageJsonDir: ..\..\reference\EvalTrack\evaltrack-api
+      react: false
+      angular: false
+  adminNodeSdk:
+    - outputDir: ..\..\EvalTrack_System\server\src\dataconnect-admin-generated
+      package: "@dataconnect/admin-generated"
+      packageJsonDir: ..\..\EvalTrack_System\server

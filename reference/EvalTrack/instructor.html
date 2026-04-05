@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EvalTrack — Instructor Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="portal.css">
+  <link rel="icon" type="image/png" href="icon&logo/logo.png">
+</head>
+<body>
+<canvas id="particles"></canvas>
+
+<!-- ══ SIDEBAR ══ -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <img class="sidebar-logo-img" src="icon&logo/logo.png" alt="JMC Logo">
+    <div>
+      <div class="sidebar-brand">EvalTrack</div>
+      <div class="sidebar-brand-sub">Instructor Portal</div>
+    </div>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-group-label">Main</div>
+    <button class="nav-link active" data-sec="dashboard">
+      <span class="ni"><i class="fa fa-house"></i></span>
+      <span>Dashboard</span>
+    </button>
+    <button class="nav-link" data-sec="evaluate">
+      <span class="ni"><i class="fa fa-clipboard-check"></i></span>
+      <span>Evaluate / Grade</span>
+    </button>
+    <button class="nav-link" data-sec="reports">
+      <span class="ni"><i class="fa fa-chart-bar"></i></span>
+      <span>AI Reports</span>
+    </button>
+  </div>
+  <div class="nav-group">
+    <div class="nav-group-label">Tools</div>
+    <button class="nav-link" data-sec="exams">
+      <span class="ni"><i class="fa fa-robot"></i></span>
+      <span>AI Exam Generator</span>
+    </button>
+    <button class="nav-link" data-sec="messages">
+      <span class="ni"><i class="fa fa-comments"></i></span>
+      <span>Admin Messages</span>
+      <span class="nbadge" id="msg-badge" style="display:none">•</span>
+    </button>
+  </div>
+
+  <div class="sidebar-footer">
+    <div class="sidebar-user-card">
+      <div class="user-avatar" id="user-avatar">I</div>
+      <div style="overflow:hidden;flex:1;">
+        <div class="user-name" id="sidebar-name">Loading...</div>
+        <div class="user-role">Instructor / Prg. Head</div>
+      </div>
+    </div>
+    <button class="btn-signout" onclick="logout()">
+      <i class="fa fa-right-from-bracket"></i> Sign Out
+    </button>
+  </div>
+</aside>
+
+<!-- ══ TOPBAR ══ -->
+<header class="topbar">
+  <div class="topbar-left">
+    <button class="mob-toggle" id="mob-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')">
+      <i class="fa fa-bars"></i>
+    </button>
+    <div class="topbar-breadcrumb">
+      <span class="topbar-crumb"><i class="fa fa-school"></i> JMC</span>
+      <i class="fa fa-chevron-right" style="font-size:9px;color:var(--g300);"></i>
+      <span class="topbar-page" id="topbar-title">Dashboard</span>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <div class="tb-pill">
+      <span class="status-dot"></span>
+      <span id="tb-user-name">Loading</span>
+    </div>
+    <div class="tb-time" id="tb-clock"></div>
+  </div>
+</header>
+
+<!-- ══ MAIN ══ -->
+<main class="main-wrap">
+
+  <!-- ── 1. DASHBOARD ── -->
+  <section id="dashboard" class="section active">
+    <div class="ph">
+      <div>
+        <div class="ph-title">Instructor AI Tooling</div>
+        <div class="ph-sub">Quick-access AI assistants for Program Heads at Jose Maria College</div>
+      </div>
+    </div>
+
+    <div class="tool-grid">
+      <div class="tool-card">
+        <div class="tool-icon ti-purple"><i class="fa fa-calendar-days"></i></div>
+        <div class="tool-head">Dean Scheduling</div>
+        <div class="tool-body">Automate meeting coordination with the Dean's schedule using AI-powered planning.</div>
+        <button class="btn btn-primary" onclick="openAIChatbot('Schedule Manager','Hello Instructor! Let me know what times you are free to meet the Dean this week and I will help coordinate.')">
+          <i class="fa fa-calendar"></i> Schedule Meeting
+        </button>
+      </div>
+      <div class="tool-card">
+        <div class="tool-icon ti-amber"><i class="fa fa-book-open"></i></div>
+        <div class="tool-head">Curriculum Resources</div>
+        <div class="tool-body">Get curated links to teaching materials, syllabi, and reference books for your subjects.</div>
+        <button class="btn btn-primary" onclick="openAIChatbot('Library AI','Hello Instructor! Which subject are you looking for reference materials or textbooks for?')">
+          <i class="fa fa-search"></i> Find Materials
+        </button>
+      </div>
+      <div class="tool-card">
+        <div class="tool-icon ti-teal"><i class="fa fa-bullseye"></i></div>
+        <div class="tool-head">Teaching Goal Coach</div>
+        <div class="tool-body">Set and track professional teaching goals, class performance targets, and curriculum milestones.</div>
+        <button class="btn btn-primary" onclick="openAIChatbot('Goal Coach','Welcome, Instructor! Are you looking to improve class passing rates, reduce failure counts, or refine curriculum delivery?')">
+          <i class="fa fa-flag"></i> Set Goals
+        </button>
+      </div>
+      <div class="tool-card">
+        <div class="tool-icon ti-mag"><i class="fa fa-wand-magic-sparkles"></i></div>
+        <div class="tool-head">AI Exam Generator</div>
+        <div class="tool-body">Paste a topic or syllabus block and instantly generate quizzes, MCQs, and rubrics.</div>
+        <button class="btn btn-primary" onclick="openAIChatbot('Exam &amp; Quiz Bot','Hello! Paste your topic or syllabus block here and I will generate a structured 10-question quiz for it.')">
+          <i class="fa fa-robot"></i> Generate Exam
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 2. EVALUATE ── -->
+  <section id="evaluate" class="section">
+    <div class="ph">
+      <div>
+        <div class="ph-title">Evaluate & Grade</div>
+        <div class="ph-sub">Search a student → set semester → enter grades → sync AI automation</div>
+      </div>
+    </div>
+
+    <!-- STEP 1: search -->
+    <div class="card">
+      <div class="step-head">
+        <div class="step-num">1</div>
+        <div class="step-info">
+          <div class="step-name">Find Student</div>
+          <div class="step-desc">Search by name or student ID</div>
+        </div>
+      </div>
+      <div style="position:relative;">
+        <div style="position:relative;">
+          <i class="fa fa-search" style="position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--g300);font-size:13px;pointer-events:none;"></i>
+          <input type="text" id="student-search-input" class="fc" style="padding-left:36px;" placeholder="Type student name or ID number...">
+        </div>
+        <div id="student-search-results"></div>
+      </div>
+
+      <div id="selected-student-info" style="display:none;margin-top:16px;">
+        <div class="student-profile-card">
+          <div class="sp-avatar" id="sp-avatar">?</div>
+          <div>
+            <div class="sp-name" id="display-student-name">—</div>
+            <div class="sp-meta" id="display-student-id">—</div>
+          </div>
+          <div class="sp-actions">
+            <span class="badge bg-green" id="display-student-status">● Active</span>
+          </div>
+        </div>
+        <div class="form-row fc-3">
+          <div class="field">
+            <div class="field-label">Program</div>
+            <select id="manage-program" class="fc">
+              <option value="BSIT">BSIT</option>
+              <option value="BSEMC">BSEMC</option>
+            </select>
+          </div>
+          <div class="field">
+            <div class="field-label">Year Level</div>
+            <select id="manage-year" class="fc">
+              <option value="1">1st Year</option><option value="2">2nd Year</option>
+              <option value="3">3rd Year</option><option value="4">4th Year</option>
+            </select>
+          </div>
+          <div class="field">
+            <div class="field-label">Student Type</div>
+            <select id="manage-type" class="fc">
+              <option value="regular">Regular</option>
+              <option value="irregular">Irregular</option>
+              <option value="transferee">Transferee</option>
+            </select>
+          </div>
+        </div>
+        <button class="btn btn-outline btn-sm" id="btn-sync-profile" style="margin-top:12px;">
+          <i class="fa fa-rotate"></i> Sync Student Profile
+        </button>
+      </div>
+    </div>
+
+    <!-- STEP 2: term -->
+    <div class="card">
+      <div class="step-head">
+        <div class="step-num">2</div>
+        <div class="step-info">
+          <div class="step-name">Select Semester</div>
+          <div class="step-desc">Choose the target academic term to grade</div>
+        </div>
+      </div>
+      <div class="field" style="max-width:300px;">
+        <div class="field-label">Target Semester</div>
+        <select id="term-select" class="fc"></select>
+      </div>
+    </div>
+
+    <!-- STEP 3: grade table -->
+    <div id="grading-area" style="display:none;">
+      <div class="card">
+        <div class="card-hd">
+          <div>
+            <div class="card-title"><i class="fa fa-table-cells"></i> Grade Input</div>
+            <div class="card-sub" id="grading-instructions">Enter grades below</div>
+          </div>
+          <span class="badge bg-purple" id="grading-mode-badge">Regular Mode</span>
+        </div>
+
+        <div class="table-wrap" style="max-height:420px;overflow-y:auto;margin-bottom:14px;">
+          <table>
+            <thead><tr>
+              <th id="th-term" style="display:none;">Term</th>
+              <th>Code</th><th>Subject</th><th>Prerequisite</th>
+              <th>Grade</th><th></th>
+            </tr></thead>
+            <tbody id="grading-body"></tbody>
+          </table>
+        </div>
+
+        <div style="display:flex;align-items:flex-end;gap:10px;padding:14px;background:var(--g50);border:1px dashed var(--g200);border-radius:10px;margin-bottom:16px;flex-wrap:wrap;">
+          <div class="field" style="flex:1;min-width:200px;margin:0;">
+            <div class="field-label">Add Extra Subject</div>
+            <select id="add-subject-select" class="fc"></select>
+          </div>
+          <button class="btn btn-ghost btn-sm" id="btn-add-subject">
+            <i class="fa fa-plus"></i> Add Subject
+          </button>
+        </div>
+
+        <!-- Enrollment preview -->
+        <div id="enrollment-forecast-box" style="display:none;" class="enroll-preview">
+          <div class="enroll-preview-label"><i class="fa fa-wand-magic-sparkles"></i> AI Enrollment Recommendation</div>
+          <div class="enroll-preview-sub">Based on passed subjects, the student is eligible for these next semester:</div>
+          <div class="enroll-chips" id="forecast-list"></div>
+        </div>
+
+        <button class="btn btn-success" id="submit-grades-btn" style="width:100%;padding:13px;font-size:14px;">
+          <i class="fa fa-bolt"></i> Generate n8n Automation & Sync AI Records
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 3. REPORTS ── -->
+  <section id="reports" class="section">
+    <div class="ph">
+      <div>
+        <div class="ph-title">AI Evaluation Reports</div>
+        <div class="ph-sub">Performance flags, AI insights, and enrollment forecasts</div>
+      </div>
+      <div class="ph-actions">
+        <span class="badge bg-purple" id="stat-total-reports" style="padding:6px 14px;font-size:11px;">0 Records</span>
+      </div>
+    </div>
+
+    <!-- FILTER BAR -->
+    <div class="filter-bar">
+      <div class="field">
+        <div class="field-label">Program</div>
+        <select id="filter-program" class="fc">
+          <option value="">All Programs</option>
+          <option value="BSIT">BSIT</option>
+          <option value="BSEMC">BSEMC</option>
+        </select>
+      </div>
+      <div class="field">
+        <div class="field-label">Semester</div>
+        <select id="filter-semester" class="fc">
+          <option value="">All Semesters</option>
+          <option value="2025 - 1 semester">2025 — 1st Sem</option>
+          <option value="2025 - 2 semester">2025 — 2nd Sem</option>
+          <option value="2026 - 1 semester">2026 — 1st Sem</option>
+          <option value="2026 - summer">2026 — Summer</option>
+        </select>
+      </div>
+      <div class="field">
+        <div class="field-label">Year Level</div>
+        <select id="filter-year" class="fc">
+          <option value="">All Years</option>
+          <option value="1">1st Year</option><option value="2">2nd Year</option>
+          <option value="3">3rd Year</option><option value="4">4th Year</option>
+        </select>
+      </div>
+      <div class="field">
+        <div class="field-label">Student Type</div>
+        <select id="filter-type" class="fc">
+          <option value="">All Types</option>
+          <option value="Regular">Regular</option>
+          <option value="Irregular">Irregular</option>
+          <option value="Transferee">Transferee</option>
+        </select>
+      </div>
+      <div class="field">
+        <div class="field-label">Student</div>
+        <select id="filter-search" class="fc"><option value="">All Students</option></select>
+      </div>
+    </div>
+
+    <!-- AI HUB -->
+    <div class="ai-hub">
+      <div class="stars"></div>
+      <div class="ai-hub-top">
+        <div class="ai-hub-brand">
+          <div class="ai-hub-icon"><i class="fa fa-robot"></i></div>
+          <div>
+            <div class="ai-hub-title">AI Intelligence Hub<small>EvalTrack Smart Engine · Gemini 2.0 Flash</small></div>
+          </div>
+        </div>
+        <div class="hub-tabs">
+          <button class="hub-tab active-rec" id="tab-rec" onclick="switchHubTab('rec')"><i class="fa fa-star" style="font-size:10px;"></i> Recommendations</button>
+          <button class="hub-tab" id="tab-rep" onclick="switchHubTab('rep')"><i class="fa fa-table" style="font-size:10px;"></i> Grade Reports</button>
+          <button class="hub-tab" id="tab-chat" onclick="switchHubTab('chat')"><i class="fa fa-message" style="font-size:10px;"></i> AI Chat</button>
+        </div>
+      </div>
+
+      <div class="hub-panel">
+        <!-- REC VIEW -->
+        <div id="view-rec">
+          <div class="ai-rec-label"><i class="fa fa-graduation-cap"></i> Enrollment Recommendation <span id="ai-loaded-badge" style="display:none;margin-left:auto;font-size:10px;font-weight:400;color:rgba(255,255,255,.4);"><i class="fa fa-circle-check" style="color:var(--green);"></i> Loaded</span></div>
+          <div class="ai-rec-sub">Select a student from the filter to generate AI-powered enrollment recommendations</div>
+          <div id="ai-recommendation-list">
+            <div class="hub-empty"><i class="fa fa-user-graduate"></i><p>Filter by student above<br>to generate recommendations</p></div>
+          </div>
+        </div>
+
+        <!-- REPORTS VIEW -->
+        <div id="view-rep" style="display:none;">
+          <div class="table-wrap">
+            <table id="reports-hub-table">
+              <thead><tr>
+                <th>Student</th><th>Subject</th><th>Grade</th>
+                <th>Status</th><th>AI Insight</th><th>Action</th>
+              </tr></thead>
+              <tbody id="reports-hub-body">
+                <tr><td colspan="6" style="text-align:center;padding:3rem;color:rgba(255,255,255,.3);"><i class="fa fa-spinner fa-spin"></i> Loading reports...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- CHAT VIEW -->
+        <div id="view-chat" style="display:none;">
+          <div class="hub-msgs" id="chat-hub-messages">
+            <div class="msg-bot">
+              <strong style="color:var(--p300);font-size:11px;display:block;margin-bottom:4px;"><i class="fa fa-robot"></i> EvalTrack AI</strong>
+              Hello! Select a student from the filters above and I can answer detailed questions about their academic performance, standing, and enrollment eligibility.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hub-input-row">
+        <div class="hub-input-wrap">
+          <i class="fa fa-message"></i>
+          <input type="text" class="hub-input" id="ai-hub-chat-input" placeholder="Ask about a student's grades, performance, or eligibility...">
+        </div>
+        <button class="hub-send" id="chat-send-btn" title="Send message">
+          <i class="fa fa-paper-plane"></i>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 4. EXAMS ── -->
+  <section id="exams" class="section">
+    <div class="card">
+      <div class="empty-state">
+        <div class="empty-icon"><i class="fa fa-wand-magic-sparkles"></i></div>
+        <div class="empty-title">AI Exam & Quiz Generator</div>
+        <div class="empty-text">Paste any syllabus topic, chapter title, or learning objective. The AI will generate structured quizzes, MCQs, true/false sets, essay prompts, and rubrics instantly.</div>
+        <button class="btn btn-primary" style="padding:12px 28px;font-size:14px;" onclick="openAIChatbot('Exam &amp; Quiz Bot','Hello Instructor! I can generate quizzes, multiple-choice tests, fill-in-the-blank sets, and rubrics. What topic or subject would you like to create an exam for?')">
+          <i class="fa fa-rocket"></i> Launch AI Exam Generator
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 5. MESSAGES ── -->
+  <section id="messages" class="section">
+    <div class="ph">
+      <div class="ph-title">Admin Messages</div>
+      <div class="ph-sub">Real-time communication with the Dean and Admin</div>
+    </div>
+    <div id="advanced-chat-container"></div>
+  </section>
+
+</main>
+
+<div id="toast-container"></div>
+
+<!-- AI CHATBOT MODAL -->
+<div class="chat-overlay" id="ai-chatbot-overlay">
+  <div class="chat-modal-box">
+    <div class="chat-modal-header">
+      <div class="chat-modal-title">
+        <i class="fa fa-robot"></i>
+        <span id="chatbot-title">AI Assistant</span>
+        <span class="ai-dot"></span>
+      </div>
+      <button class="chat-modal-close" onclick="document.getElementById('ai-chatbot-overlay').style.display='none'">
+        <i class="fa fa-times"></i>
+      </button>
+    </div>
+    <div class="chat-modal-msgs" id="chatbot-messages"></div>
+    <div class="chat-modal-input-row">
+      <input type="text" id="chatbot-input" class="fc" style="flex:1;" placeholder="Ask anything...">
+      <button class="btn btn-primary" id="chatbot-send-btn" style="padding:9px 16px;">
+        <i class="fa fa-paper-plane"></i>
+      </button>
+    </div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+<script>
+/* ═══════ Instructor Portal Controller ═══════ */
+
+const PAGE_TITLES = {
+  dashboard: 'Dashboard', evaluate: 'Evaluate / Grade',
+  reports: 'AI Reports', exams: 'AI Exam Generator', messages: 'Admin Messages'
+};
+
+// ── CLOCK ──
+function startClock() {
+  function tick() {
+    const now = new Date();
+    document.getElementById('tb-clock').textContent =
+      now.toLocaleTimeString('en-US', { hour:'2-digit', minute:'2-digit' });
+  }
+  tick(); setInterval(tick, 1000);
+}
+
+// ── TOAST ──
+window.showToast = function(msg, type = 'info') {
+  const c = document.getElementById('toast-container');
+  const d = document.createElement('div');
+  d.className = `toast-item ${type}`;
+  const icons = { success:'fa-check-circle', error:'fa-times-circle', warning:'fa-triangle-exclamation', info:'fa-circle-info' };
+  d.innerHTML = `<i class="fa ${icons[type] || icons.info}"></i>${msg}`;
+  c.appendChild(d);
+  setTimeout(() => { d.style.opacity='0'; d.style.transform='translateX(20px)'; d.style.transition='all .3s'; setTimeout(() => d.remove(), 300); }, 3000);
+};
+
+// ── NAV ──
+document.querySelectorAll('.nav-link[data-sec]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const sec = btn.dataset.sec;
+    document.querySelectorAll('.nav-link').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(sec)?.classList.add('active');
+    document.getElementById('topbar-title').textContent = PAGE_TITLES[sec] || sec;
+    if (window.innerWidth <= 768) document.getElementById('sidebar').classList.remove('open');
+    if (sec === 'reports' && !hubFetched) renderReportsHub();
+  });
+});
+
+// ── AI HUB TABS ──
+window.switchHubTab = function(tab) {
+  ['rec','rep','chat'].forEach(t => {
+    const v = document.getElementById(`view-${t}`);
+    const b = document.getElementById(`tab-${t}`);
+    if (v) v.style.display = t === tab ? 'block' : 'none';
+    if (b) b.className = `hub-tab${t===tab ? ` active-${t==='rec'?'rec':t==='rep'?'rep':'chat'}` : ''}`;
+  });
+  if (tab === 'rep') renderReportsHub();
+};
+
+// ── CHATBOT MODAL ──
+window.openAIChatbot = function(title, intro) {
+  const cleanTitle = title.replace(/&amp;/g, '&');
+  document.getElementById('chatbot-title').textContent = cleanTitle;
+  document.getElementById('ai-chatbot-overlay').style.display = 'flex';
+  document.getElementById('chatbot-messages').innerHTML = '';
+  addChatBubble(intro || 'Hello! How can I help?', 'bot');
+  document.getElementById('chatbot-input').focus();
+  // store for send handler
+  window._chatbotTopic = cleanTitle;
+};
+
+function addChatBubble(text, sender, id = null) {
+  const area = document.getElementById('chatbot-messages');
+  if (!area) return;
+  const wrap = document.createElement('div');
+  wrap.style.display = 'flex';
+  wrap.style.flexDirection = 'column';
+  wrap.style.alignItems = sender === 'user' ? 'flex-end' : 'flex-start';
+  const bubble = document.createElement('div');
+  if (id) bubble.id = id;
+  bubble.className = sender === 'user' ? 'cbot-bubble-user' : 'cbot-bubble-bot';
+  if (sender === 'bot') bubble.innerHTML = `<strong><i class="fa fa-robot"></i> EvalTrack AI</strong>${String(text || '...').replace(/\n/g, '<br>')}`;
+  else bubble.innerHTML = String(text || '').replace(/\n/g, '<br>');
+  wrap.appendChild(bubble);
+  area.appendChild(wrap);
+  area.scrollTop = area.scrollHeight;
+}
+
+function sendChatbotMsg() {
+  const inp = document.getElementById('chatbot-input');
+  const txt = inp.value.trim(); if (!txt) return;
+  addChatBubble(txt, 'user'); inp.value = '';
+  const tid = 'cb' + Date.now();
+  const dot = `<span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span>`;
+  addChatBubble(dot, 'bot', tid);
+  fetch('ai_chat_handler.php', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ topic: window._chatbotTopic || 'General', query: txt })
+  })
+  .then(r => r.json())
+  .then(d => {
+    const b = document.getElementById(tid);
+    if (b) b.innerHTML = `<strong><i class="fa fa-robot"></i> EvalTrack AI</strong>${String(d.reply || 'No response.').replace(/\n/g,'<br>')}`;
+    document.getElementById('chatbot-messages').scrollTop = 99999;
+  })
+  .catch(() => { const b = document.getElementById(tid); if (b) b.innerHTML = '<strong><i class="fa fa-exclamation-triangle"></i> Error</strong>Could not reach AI. Ensure XAMPP & internet are running.'; });
+}
+
+document.getElementById('chatbot-send-btn').addEventListener('click', sendChatbotMsg);
+document.getElementById('chatbot-input').addEventListener('keypress', e => { if (e.key === 'Enter') sendChatbotMsg(); });
+document.getElementById('ai-chatbot-overlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('ai-chatbot-overlay'))
+    document.getElementById('ai-chatbot-overlay').style.display = 'none';
+});
+
+// ══════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  startClock();
+  const user = checkAuth(['instructor', 'admin']);
+  if (!user) return;
+
+  document.getElementById('sidebar-name').textContent = user.name;
+  document.getElementById('tb-user-name').textContent = user.name;
+  document.getElementById('user-avatar').textContent = user.name?.charAt(0)?.toUpperCase() || 'I';
+
+  initAdvancedChat('advanced-chat-container', user);
+
+  // Populate semester dropdown
+  generateSemesters().forEach(s => {
+    const o = document.createElement('option'); o.value = s; o.textContent = s;
+    document.getElementById('term-select').appendChild(o);
+  });
+
+  // ── STUDENT SEARCH ──
+  let allStudents = [], currentStudent = null;
+  const searchInput = document.getElementById('student-search-input');
+  const resultsEl   = document.getElementById('student-search-results');
+  const infoArea    = document.getElementById('selected-student-info');
+  const gradingArea = document.getElementById('grading-area');
+
+  async function fetchStudents() {
+    try {
+      const r = await fetch('get_users.php');
+      const u = await r.json();
+      allStudents = u.filter(x => x.role === 'student');
+    } catch(e) {}
+  }
+  fetchStudents();
+
+  searchInput.addEventListener('input', e => {
+    const q = e.target.value.trim().toLowerCase();
+    if (!q) { resultsEl.style.display = 'none'; return; }
+    const hits = allStudents.filter(s =>
+      String(s.name).toLowerCase().includes(q) || String(s.id).toLowerCase().includes(q)
+    );
+    resultsEl.innerHTML = '';
+    if (!hits.length) {
+      resultsEl.innerHTML = '<div class="sr-item"><span style="color:var(--g400);">No students found.</span></div>';
+    } else {
+      hits.slice(0, 12).forEach(s => {
+        const div = document.createElement('div');
+        div.className = 'sr-item';
+        div.innerHTML = `
+          <div class="sr-avatar">${s.name.charAt(0)}</div>
+          <div><div class="sr-name">${s.name}</div><div class="sr-id">ID: ${s.id} · ${s.program||'BSIT'}</div></div>`;
+        div.addEventListener('click', () => selectStudent(s));
+        resultsEl.appendChild(div);
+      });
+    }
+    resultsEl.style.display = 'block';
+  });
+
+  document.addEventListener('click', e => {
+    if (!searchInput.contains(e.target) && !resultsEl.contains(e.target)) resultsEl.style.display = 'none';
+  });
+
+  function selectStudent(s) {
+    currentStudent = s;
+    searchInput.value = `${s.name} (${s.id})`;
+    resultsEl.style.display = 'none';
+    document.getElementById('display-student-name').textContent = s.name;
+    document.getElementById('display-student-id').textContent = `ID: ${s.id} · ${s.program || 'BSIT'} · ${s.student_type || 'Regular'}`;
+    document.getElementById('sp-avatar').textContent = s.name.charAt(0).toUpperCase();
+    document.getElementById('manage-program').value = s.program || 'BSIT';
+    document.getElementById('manage-year').value = s.year_level || '1';
+    document.getElementById('manage-type').value = s.student_type || 'regular';
+    infoArea.style.display = 'block';
+    renderGradingTable();
+  }
+
+  // Sync Profile
+  document.getElementById('btn-sync-profile').addEventListener('click', async () => {
+    if (!currentStudent) return;
+    const btn = document.getElementById('btn-sync-profile');
+    const orig = btn.innerHTML;
+    btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Syncing...'; btn.disabled = true;
+    const fd = new FormData();
+    fd.append('id', currentStudent.id);
+    fd.append('program', document.getElementById('manage-program').value);
+    fd.append('year_level', document.getElementById('manage-year').value);
+    fd.append('student_type', document.getElementById('manage-type').value);
+    try {
+      const r = await fetch('update_user_metadata.php', { method: 'POST', body: fd });
+      const res = await r.json();
+      if (res.success) { showToast('Profile synced successfully!', 'success'); await fetchStudents(); renderGradingTable(); }
+      else showToast(res.message || 'Sync failed.', 'error');
+    } catch(e) { showToast('Network error.', 'error'); }
+    finally { btn.innerHTML = orig; btn.disabled = false; }
+  });
+
+  // Build add-subject dropdown
+  const addSubSel = document.getElementById('add-subject-select');
+  getProspectusArray().forEach(sub => {
+    const o = document.createElement('option');
+    o.value = JSON.stringify(sub);
+    o.textContent = `${sub.code} – ${sub.desc}`;
+    addSubSel.appendChild(o);
+  });
+
+  // Render grading table
+  function renderGradingTable() {
+    if (!currentStudent) return;
+    const type    = document.getElementById('manage-type').value;
+    const yearVal = document.getElementById('manage-year').value;
+    const termVal = document.getElementById('term-select').value;
+    const isTransferee = type === 'transferee';
+    const sfx = termVal.toLowerCase().includes('summer') ? 'summer' : (termVal.includes(' 2 ') ? '2' : '1');
+    const key  = sfx === 'summer' ? `summer-${yearVal}` : `${yearVal}-${sfx}`;
+    const gBody = document.getElementById('grading-body');
+    const thTerm = document.getElementById('th-term');
+
+    document.getElementById('grading-mode-badge').textContent = isTransferee ? 'Transferee Mode' : 'Regular Mode';
+    document.getElementById('grading-instructions').textContent = isTransferee
+      ? `Historical grades for ${currentStudent.name} (Transferee)`
+      : `Grades for ${currentStudent.name} — ${termVal}`;
+    thTerm.style.display = isTransferee ? 'table-cell' : 'none';
+    gBody.innerHTML = '';
+
+    if (isTransferee) {
+      Object.keys(BSIT_PROSPECTUS).forEach(k => BSIT_PROSPECTUS[k].forEach(sub => pushRow(sub, k)));
+    } else {
+      (BSIT_PROSPECTUS[key] || []).forEach(sub => pushRow(sub, termVal));
+    }
+    window._gradingStudentId = currentStudent.id;
+    gradingArea.style.display = 'block';
+  }
+
+  function pushRow(sub, termLabel, added = false) {
+    const isTransferee = document.getElementById('manage-type').value === 'transferee';
+    const showTerm = isTransferee || added;
+    const gBody = document.getElementById('grading-body');
+    const th = document.getElementById('th-term');
+    if (showTerm) th.style.display = 'table-cell';
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      ${showTerm ? `<td><span class="badge bg-gray" style="font-size:10px;">${added ? 'Added' : termLabel}</span></td>` : ''}
+      <td><strong>${sub.code}</strong></td>
+      <td style="max-width:220px;">${sub.desc}</td>
+      <td><span class="badge bg-gray">${sub.prereq || 'none'}</span></td>
+      <td><input type="number" class="grade-input" data-code="${sub.code}" data-desc="${sub.desc}" data-term="${termLabel}" min="1" max="100" placeholder="—"></td>
+      <td><button class="btn btn-danger-soft btn-xs" onclick="this.closest('tr').remove()"><i class="fa fa-trash"></i></button></td>
+    `;
+    gBody.appendChild(tr);
+  }
+
+  ['term-select','manage-program','manage-year','manage-type'].forEach(id =>
+    document.getElementById(id).addEventListener('change', renderGradingTable)
+  );
+
+  document.getElementById('btn-add-subject').addEventListener('click', () => {
+    const v = addSubSel.value; if (!v) return;
+    pushRow(JSON.parse(v), document.getElementById('term-select').value, true);
+  });
+
+  // SUBMIT GRADES
+  document.getElementById('submit-grades-btn').addEventListener('click', async () => {
+    const inputs = document.querySelectorAll('.grade-input');
+    let evals = [];
+    inputs.forEach(inp => { if (inp.value) evals.push({ code: inp.dataset.code, subject: inp.dataset.desc, sem: inp.dataset.term, grade: inp.value }); });
+    if (!evals.length) { showToast('Enter at least one grade to continue.', 'warning'); return; }
+
+    const btn = document.getElementById('submit-grades-btn');
+    const orig = btn.innerHTML;
+    btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Syncing AI Records...'; btn.disabled = true;
+
+    try {
+      const r = await fetch('save_evaluation.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ studentId: window._gradingStudentId, grades: evals })
+      });
+      const res = await r.json();
+      if (res.success) {
+        showToast('AI Evaluation synced successfully!', 'success');
+        hubFetched = false;
+        // Enrollment forecast
+        try {
+          const fr = await fetch(`get_enrollment_forecast.php?student_id=${window._gradingStudentId}`);
+          const fd = await fr.json();
+          if (fd.success && fd.recommendations.length > 0) {
+            const box = document.getElementById('enrollment-forecast-box');
+            const list = document.getElementById('forecast-list');
+            list.innerHTML = '';
+            fd.recommendations.slice(0, 8).forEach(s => {
+              const chip = document.createElement('div');
+              chip.className = 'enroll-chip';
+              chip.innerHTML = `<i class="fa fa-book"></i>${s.code}`;
+              list.appendChild(chip);
+            });
+            box.style.display = 'block';
+          }
+        } catch(e) {}
+        setTimeout(() => {
+          gradingArea.style.display = 'none';
+          infoArea.style.display = 'none';
+          searchInput.value = '';
+          document.getElementById('enrollment-forecast-box').style.display = 'none';
+          btn.innerHTML = orig; btn.disabled = false;
+        }, 3000);
+      } else { showToast(res.message || 'Save failed.', 'error'); btn.innerHTML = orig; btn.disabled = false; }
+    } catch(e) { showToast('Connection error. Check XAMPP.', 'error'); btn.innerHTML = orig; btn.disabled = false; }
+  });
+
+  // ── REPORTS HUB ──
+  let cachedEvals = [], hubFetched = false;
+
+  async function renderReportsHub() {
+    const tbody = document.getElementById('reports-hub-body');
+    if (!tbody) return;
+    if (!hubFetched) {
+      tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:2rem;color:rgba(255,255,255,.4);"><i class="fa fa-spinner fa-spin"></i> Fetching records...</td></tr>';
+      try {
+        const r = await fetch('get_evaluations.php');
+        cachedEvals = await r.json();
+        hubFetched = true;
+      } catch(e) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:2rem;color:rgba(255,255,255,.35);">Failed to connect.</td></tr>';
+        return;
+      }
+    }
+    document.getElementById('stat-total-reports').textContent = `${cachedEvals.length} Records`;
+
+    // Populate student dropdown
+    const sel = document.getElementById('filter-search');
+    if (sel.options.length <= 1 && cachedEvals.length > 0) {
+      const unique = [...new Map(cachedEvals.map(e => [e.student_id, e.student_name])).entries()];
+      unique.sort((a,b) => a[1].localeCompare(b[1])).forEach(([id, name]) => {
+        const o = document.createElement('option'); o.value = id; o.textContent = name; sel.appendChild(o);
+      });
+    }
+
+    const fP = document.getElementById('filter-program').value;
+    const fS = document.getElementById('filter-semester').value;
+    const fY = document.getElementById('filter-year').value;
+    const fT = document.getElementById('filter-type').value;
+    const fSearch = document.getElementById('filter-search').value;
+
+    const filtered = cachedEvals.filter(e => {
+      const mP = !fP || e.program === fP;
+      const mS = !fS || (e.sem || e.semester_taken || '') === fS;
+      const mY = !fY || String(e.year_level) === fY;
+      const mT = !fT || (e.student_type || 'Regular').toLowerCase() === fT.toLowerCase();
+      const mSearch = !fSearch || String(e.student_id) === fSearch;
+      return mP && mS && mY && mT && mSearch;
+    });
+
+    tbody.innerHTML = '';
+    if (!filtered.length) {
+      tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:3rem;color:rgba(255,255,255,.3);">No matching reports found.</td></tr>';
+      return;
+    }
+
+    filtered.forEach(e => {
+      const pass = parseFloat(e.grade) >= 75;
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td><strong style="color:white;">${e.student_name}</strong><br><span style="font-size:10px;color:rgba(255,255,255,.3);">${e.student_id}</span></td>
+        <td><span class="badge" style="background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.8);">${e.subject_code}</span></td>
+        <td><strong style="color:#fde68a;font-size:15px;">${e.grade}</strong></td>
+        <td><span class="badge ${pass ? 'bg-green' : 'bg-red'}">${e.status || (pass ? 'Passed' : 'Failed')}</span></td>
+        <td><div style="font-size:11.5px;color:rgba(255,255,255,.8);background:rgba(255,255,255,0.06);padding:6px 10px;border-radius:8px;border-left:2px solid var(--p400);max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${e.ai_insight || ''}">${e.ai_insight || '<span style="color:rgba(255,255,255,.3);font-style:italic;">No insight</span>'}</div></td>
+        <td><button class="btn btn-sm" style="background:rgba(255,255,255,.12);color:white;border:none;" onclick="viewStudentRec('${e.student_id}','${e.student_name}')"><i class="fa fa-star" style="font-size:10px;"></i> Advice</button></td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  window.viewStudentRec = async function(sid, name) {
+    switchHubTab('rec');
+    const list = document.getElementById('ai-recommendation-list');
+    list.innerHTML = '<div class="hub-empty"><i class="fa fa-spinner fa-spin"></i><p>Generating AI recommendations...</p></div>';
+    try {
+      const r = await fetch(`get_enrollment_forecast.php?student_id=${sid}`);
+      const d = await r.json();
+      if (d.success && d.recommendations.length > 0) {
+        const grid = document.createElement('div'); grid.className = 'rec-grid';
+        d.recommendations.slice(0, 12).forEach(s => {
+          const c = document.createElement('div'); c.className = 'rec-chip';
+          c.innerHTML = `<i class="fa fa-book-open"></i><strong>${s.code}</strong>: ${s.title}`;
+          grid.appendChild(c);
+        });
+        list.innerHTML = '';
+        list.appendChild(grid);
+        const fb = document.getElementById('ai-loaded-badge');
+        if (fb) { fb.style.display = 'inline-flex'; fb.innerHTML = `<i class="fa fa-circle-check" style="color:var(--green);margin-right:4px;"></i> ${name}`; }
+      } else {
+        list.innerHTML = '<div class="hub-empty"><i class="fa fa-graduation-cap"></i><p>No eligible subjects found. Student may need to complete more prerequisites.</p></div>';
+      }
+    } catch(e) {
+      list.innerHTML = '<div class="hub-empty"><i class="fa fa-exclamation-circle"></i><p>AI fetch error. Try again.</p></div>';
+    }
+  };
+
+  ['filter-program','filter-semester','filter-year','filter-type','filter-search'].forEach(id => {
+    document.getElementById(id)?.addEventListener('change', () => {
+      hubFetched = false;
+      renderReportsHub();
+      const sel = document.getElementById('filter-search');
+      if (id === 'filter-search' && sel.value) {
+        const match = cachedEvals.find(e => String(e.student_id) === sel.value);
+        if (match) viewStudentRec(match.student_id, match.student_name);
+      }
+    });
+  });
+
+  // Hub AI Chat
+  document.getElementById('chat-send-btn').addEventListener('click', sendHubChat);
+  document.getElementById('ai-hub-chat-input').addEventListener('keypress', e => { if (e.key === 'Enter') sendHubChat(); });
+
+  function sendHubChat() {
+    const inp = document.getElementById('ai-hub-chat-input');
+    const txt = inp.value.trim(); if (!txt) return;
+    switchHubTab('chat');
+    const area = document.getElementById('chat-hub-messages');
+    const uBub = document.createElement('div');
+    uBub.className = 'msg-user'; uBub.textContent = txt;
+    area.appendChild(uBub);
+    const tid = 'hc' + Date.now();
+    const bBub = document.createElement('div');
+    bBub.className = 'msg-bot'; bBub.id = tid;
+    bBub.innerHTML = '<strong style="color:var(--p300);font-size:11px;display:block;margin-bottom:4px;"><i class="fa fa-robot"></i> Thinking</strong><span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span>';
+    area.appendChild(bBub);
+    area.scrollTop = area.scrollHeight;
+    inp.value = '';
+
+    const sel = document.getElementById('filter-search');
+    const sid = sel.value;
+    const sname = sid ? sel.options[sel.selectedIndex].text : null;
+
+    fetch('ai_chat_handler.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ 
+        topic: 'AI Hub', 
+        query: txt,
+        student_id: sid,
+        student_name: sname
+      })
+    })
+    .then(r => r.json())
+    .then(d => {
+      const b = document.getElementById(tid);
+      if (b) b.innerHTML = `<strong style="color:var(--p300);font-size:11px;display:block;margin-bottom:4px;"><i class="fa fa-robot"></i> EvalTrack AI</strong>${String(d.reply || '').replace(/\n/g,'<br>')}`;
+      area.scrollTop = area.scrollHeight;
+    })
+    .catch(() => { const b = document.getElementById(tid); if(b) b.innerHTML='<strong style="color:var(--p300);font-size:11px;display:block;margin-bottom:4px;"><i class="fa fa-exclamation-circle"></i> Error</strong>Could not reach AI server. Check XAMPP internet connection.'; });
+  }
+
+  // Initial load
+  renderReportsHub();
+});
+</script>
+</body>
+</html>

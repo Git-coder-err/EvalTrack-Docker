@@ -1,0 +1,142 @@
+mutation CreateDemoData @transaction @auth(level: USER, insecureReason: "This is a seed mutation and is safe to expose to all logged in users.") {
+  organization_insertMany(data: [
+    {
+      id: "org1-uuid",
+      name: "Acme Corporation",
+      industry: "Technology",
+      contactEmail: "contact@acme.com",
+      createdAt: "2023-01-01T00:00:00Z"
+    },
+    {
+      id: "org2-uuid",
+      name: "Globex Inc.",
+      industry: "Manufacturing",
+      contactEmail: "info@globex.com",
+      createdAt: "2023-01-01T00:00:00Z"
+    }
+  ])
+  user_insertMany(data: [
+    {
+      id: "user1-uuid",
+      organizationId: "org1-uuid",
+      email: "alice@acme.com",
+      displayName: "Alice Smith",
+      role: "Employee",
+      department: "Engineering",
+      position: "Software Engineer",
+      createdAt: "2023-01-01T00:00:00Z"
+    },
+    {
+      id: "user2-uuid",
+      organizationId: "org1-uuid",
+      email: "bob@acme.com",
+      displayName: "Bob Johnson",
+      role: "Manager",
+      department: "Engineering",
+      position: "Engineering Manager",
+      managerId: "user1-uuid",
+      createdAt: "2023-01-01T00:00:00Z"
+    },
+    {
+      id: "user3-uuid",
+      organizationId: "org2-uuid",
+      email: "charlie@globex.com",
+      displayName: "Charlie Brown",
+      role: "Employee",
+      department: "Sales",
+      position: "Sales Representative",
+      createdAt: "2023-01-01T00:00:00Z"
+    }
+  ])
+  evaluationCycle_insertMany(data: [
+    {
+      id: "cycle1-uuid",
+      organizationId: "org1-uuid",
+      name: "Q1 Performance Review 2023",
+      description: "First quarter performance evaluations",
+      startDate: "2023-01-01",
+      endDate: "2023-03-31",
+      createdAt: "2023-01-01T00:00:00Z"
+    },
+    {
+      id: "cycle2-uuid",
+      organizationId: "org1-uuid",
+      name: "Q2 Performance Review 2023",
+      description: "Second quarter performance evaluations",
+      startDate: "2023-04-01",
+      endDate: "2023-06-30",
+      createdAt: "2023-04-01T00:00:00Z"
+    }
+  ])
+  evaluationForm_insertMany(data: [
+    {
+      id: "form1-uuid",
+      organizationId: "org1-uuid",
+      name: "Standard Performance Review",
+      description: "General performance evaluation form",
+      createdAt: "2023-01-01T00:00:00Z"
+    }
+  ])
+  evaluationQuestion_insertMany(data: [
+    {
+      evaluationFormId: "form1-uuid",
+      questionText: "What are your key achievements this quarter?",
+      questionType: "TEXT",
+      order: 1
+    },
+    {
+      evaluationFormId: "form1-uuid",
+      questionText: "Areas for improvement?",
+      questionType: "TEXT",
+      order: 2
+    },
+    {
+      evaluationFormId: "form1-uuid",
+      questionText: "Overall rating?",
+      questionType: "RATING",
+      options: ["1 - Poor", "2 - Fair", "3 - Good", "4 - Excellent"],
+      order: 3
+    }
+  ])
+  evaluationInstance_insertMany(data: [
+    {
+      id: "instance1-uuid",
+      assigneeId: "user1-uuid",
+      evaluationFormId: "form1-uuid",
+      evaluationCycleId: "cycle1-uuid",
+      status: "PENDING",
+      createdAt: "2023-01-15T00:00:00Z"
+    },
+    {
+      id: "instance2-uuid",
+      assigneeId: "user2-uuid",
+      evaluationFormId: "form1-uuid",
+      evaluationCycleId: "cycle1-uuid",
+      status: "COMPLETED",
+      employeeSelfAssessment: "Achieved all my goals and exceeded expectations.",
+      managerFeedback: "Bob consistently delivers high-quality work.",
+      createdAt: "2023-01-20T00:00:00Z"
+    }
+  ])
+  goal_insertMany(data: [
+    {
+      id: "goal1-uuid",
+      userId: "user1-uuid",
+      goalText: "Complete Q1 project",
+      description: "Finish the new feature development by end of Q1",
+      status: "IN_PROGRESS",
+      targetDate: "2023-03-31",
+      createdAt: "2023-01-05T00:00:00Z"
+    },
+    {
+      id: "goal2-uuid",
+      userId: "user2-uuid",
+      goalText: "Mentor junior engineers",
+      description: "Provide guidance to two junior engineers weekly",
+      status: "COMPLETED",
+      targetDate: "2023-03-31",
+      progressNotes: "Successfully mentored two new hires.",
+      createdAt: "2023-01-10T00:00:00Z"
+    }
+  ])
+}

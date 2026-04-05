@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EvalTrack — Student Portal</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=DM+Sans:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="portal.css">
+  <link rel="icon" type="image/png" href="icon&logo/logo.png">
+  <style>
+    .enroll-tabs {
+      display: flex;
+      background: var(--g100);
+      border-radius: 10px;
+      padding: 3px;
+      gap: 2px;
+      max-width: 400px;
+      margin-bottom: 18px;
+    }
+
+    .enroll-tab {
+      flex: 1;
+      padding: 8px 14px;
+      border-radius: 8px;
+      border: none;
+      background: transparent;
+      color: var(--g400);
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all var(--fast);
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    .enroll-tab.active {
+      background: white;
+      color: var(--p500);
+      box-shadow: var(--sh1);
+    }
+  </style>
+</head>
+
+<body>
+  <canvas id="particles"></canvas>
+
+  <!-- ══ SIDEBAR ══ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <img class="sidebar-logo-img" src="icon&logo/logo.png" alt="JMC">
+      <div>
+        <div class="sidebar-brand">EvalTrack</div>
+        <div class="sidebar-brand-sub">Student Portal</div>
+      </div>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-label">My Portal</div>
+      <button class="nav-link active" data-sec="home"><span class="ni"><i
+            class="fa fa-house"></i></span><span>Home</span></button>
+      <button class="nav-link" data-sec="evaluations"><span class="ni"><i class="fa fa-chart-bar"></i></span><span>My
+          Reports</span></button>
+      <button class="nav-link" data-sec="enrollment"><span class="ni"><i
+            class="fa fa-graduation-cap"></i></span><span>Enrollment</span></button>
+      <button class="nav-link" data-sec="profile"><span class="ni"><i
+            class="fa fa-user-cog"></i></span><span>Profile</span></button>
+    </div>
+    <div class="sidebar-footer">
+      <div class="sidebar-user-card">
+        <div class="user-avatar" id="user-avatar">S</div>
+        <div style="overflow:hidden;flex:1;">
+          <div class="user-name" id="sidebar-name">Loading...</div>
+          <div class="user-role" id="sidebar-subrole">Student</div>
+        </div>
+      </div>
+      <button class="btn-signout" onclick="logout()"><i class="fa fa-right-from-bracket"></i> Sign Out</button>
+    </div>
+  </aside>
+
+  <!-- ══ TOPBAR ══ -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <button class="mob-toggle" id="mob-toggle"
+        onclick="document.getElementById('sidebar').classList.toggle('open')"><i class="fa fa-bars"></i></button>
+      <div class="topbar-breadcrumb">
+        <span class="topbar-crumb"><i class="fa fa-school"></i> JMC</span>
+        <i class="fa fa-chevron-right" style="font-size:9px;color:var(--g300);"></i>
+        <span class="topbar-page" id="topbar-title">Home</span>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <div class="tb-pill"><span class="status-dot"></span><span id="tb-user">Loading</span></div>
+      <div class="tb-time" id="tb-clock"></div>
+    </div>
+  </header>
+
+  <!-- ══ MAIN ══ -->
+  <main class="main-wrap">
+
+    <!-- 1. HOME -->
+    <section id="home" class="section active">
+      <div class="ph">
+        <div>
+          <div class="ph-title">AI Learning Assistants</div>
+          <div class="ph-sub">Personalized AI advisors to guide your academic and professional journey</div>
+        </div>
+      </div>
+
+      <!-- Welcome card -->
+      <div class="card"
+        style="background:linear-gradient(135deg,var(--p800),var(--p900));border-color:rgba(167,139,250,.2);margin-bottom:24px;position:relative;overflow:hidden;">
+        <div
+          style="position:absolute;top:-60px;right:-60px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(219,39,119,.2),transparent 70%);pointer-events:none;">
+        </div>
+        <div style="display:flex;align-items:center;gap:18px;position:relative;z-index:1;flex-wrap:wrap;">
+          <div
+            style="width:56px;height:56px;border-radius:16px;background:linear-gradient(135deg,var(--p500),var(--mag));display:flex;align-items:center;justify-content:center;font-size:22px;color:white;font-family:'Plus Jakarta Sans',sans-serif;font-weight:900;flex-shrink:0;"
+            id="welcome-avatar">S</div>
+          <div>
+            <div
+              style="font-family:'Plus Jakarta Sans',sans-serif;font-size:18px;font-weight:900;color:rgb(0, 0, 0);letter-spacing:-.02em;">
+              Welcome back, <span id="welcome-name">Student</span>!</div>
+            <div style="font-size:12px;color:rgba(14, 15, 15, 0.45);margin-top:4px;" id="welcome-details">Loading your
+              profile...</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tool-grid">
+        <div class="tool-card">
+          <div class="tool-icon ti-purple"><i class="fa fa-briefcase"></i></div>
+          <div class="tool-head">Career Path Advisor</div>
+          <div class="tool-body">Tell the AI your dream IT role — get a complete, personalized roadmap with required
+            skills and certifications.</div>
+          <button class="btn btn-primary"
+            onclick="openAIChatbot('Career Advisor','Hello! What is your dream job within Information Technology? (e.g., Full-Stack Developer, Data Scientist, Cybersecurity Analyst). Let me map out a complete roadmap for you!')">
+            <i class="fa fa-map"></i> Start Planning
+          </button>
+        </div>
+        <div class="tool-card">
+          <div class="tool-icon ti-amber"><i class="fa fa-calendar-week"></i></div>
+          <div class="tool-head">Smart Schedule Builder</div>
+          <div class="tool-body">Generate an optimized, printable study schedule. Tell the AI your subjects and it will
+            build your week.</div>
+          <button class="btn btn-primary"
+            onclick="openAIChatbot('Schedule Manager','Hi! To build your schedule, tell me: which subjects are you enrolled in this semester, and what days/hours are you free to study?')">
+            <i class="fa fa-calendar"></i> Build Schedule
+          </button>
+        </div>
+        <div class="tool-card">
+          <div class="tool-icon ti-teal"><i class="fa fa-bullseye"></i></div>
+          <div class="tool-head">Study Goal Coach</div>
+          <div class="tool-body">Set study goals, identify problem subjects, and get an accountability plan from the AI
+            coach.</div>
+          <button class="btn btn-primary"
+            onclick="openAIChatbot('Goal Coach','Welcome! Are you struggling with a specific subject, or looking to build better study habits and improve your GPA?')">
+            <i class="fa fa-flag"></i> Set My Goals
+          </button>
+        </div>
+        <div class="tool-card">
+          <div class="tool-icon ti-blue"><i class="fa fa-book-open"></i></div>
+          <div class="tool-head">Book & Resource Finder</div>
+          <div class="tool-body">Get curated textbooks, free online courses, and educational resources based on your
+            current subjects.</div>
+          <button class="btn btn-primary"
+            onclick="openAIChatbot('Library AI','Hello! What specific IT topic, programming language, or subject are you studying? I will recommend the best books and free online resources for you.')">
+            <i class="fa fa-search"></i> Find Resources
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. EVALUATIONS -->
+    <section id="evaluations" class="section">
+      <div class="ph">
+        <div>
+          <div class="ph-title">My Evaluation Reports</div>
+          <div class="ph-sub">AI-generated performance records synced by your instructor</div>
+        </div>
+        <div class="ph-actions">
+          <span class="badge bg-purple" id="eval-count" style="padding:6px 14px;font-size:11px;">0 Records</span>
+        </div>
+      </div>
+
+      <div class="filter-bar">
+        <div class="field" style="flex:2;min-width:180px;">
+          <div class="field-label">Search Subject</div>
+          <input type="text" id="filter-search" class="fc" placeholder="Subject name or code...">
+        </div>
+        <div class="field">
+          <div class="field-label">Status</div>
+          <select id="filter-status" class="fc">
+            <option value="">All Statuses</option>
+            <option value="Passed">Passed</option>
+            <option value="Failed">Failed</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="card" style="padding:0;">
+        <div class="table-wrap">
+          <table id="eval-table">
+            <thead>
+              <tr>
+                <th>Semester</th>
+                <th>Code</th>
+                <th>Subject</th>
+                <th>Grade</th>
+                <th>Status</th>
+                <th>AI Feedback</th>
+              </tr>
+            </thead>
+            <tbody id="eval-body">
+              <tr>
+                <td colspan="6" style="text-align:center;padding:3rem;color:var(--g400);"><i
+                    class="fa fa-spinner fa-spin"></i></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;">
+        <button class="btn btn-primary" onclick="goTo('enrollment')"><i class="fa fa-graduation-cap"></i> View
+          Enrollment Forecast</button>
+        <button class="btn btn-ghost" onclick="goTo('home')"><i class="fa fa-robot"></i> AI Study Advice</button>
+      </div>
+    </section>
+
+    <!-- 3. ENROLLMENT -->
+    <section id="enrollment" class="section">
+      <div class="ph">
+        <div>
+          <div class="ph-title">Enrollment Forecast</div>
+          <div class="ph-sub">Auto-generated eligibility based on passed prerequisites</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="enroll-tabs">
+          <button class="enroll-tab active" data-view="next">Eligible Subjects</button>
+          <button class="enroll-tab" data-view="full">Full Prospectus</button>
+        </div>
+
+        <div id="view-next">
+          <div class="enroll-preview" style="margin-bottom:18px;">
+            <div class="enroll-preview-label"><i class="fa fa-wand-magic-sparkles"></i> AI-Computed Enrollment
+              Eligibility</div>
+            <div class="enroll-preview-sub">Subjects you can legally enroll next semester based on prerequisites you
+              have passed</div>
+          </div>
+          <div class="form-row fc-2" style="max-width:400px;margin-bottom:16px;">
+            <div class="field">
+              <div class="field-label">Target Semester</div>
+              <select id="enroll-term" class="fc"></select>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table id="eligible-table">
+              <thead>
+                <tr>
+                  <th>Code</th>
+                  <th>Subject Description</th>
+                  <th>Year / Sem</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="eligible-body">
+                <tr>
+                  <td colspan="4" style="text-align:center;padding:2rem;color:var(--g400);"><i
+                      class="fa fa-spinner fa-spin"></i> Computing eligibility...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div id="view-full" style="display:none;">
+          <p style="font-size:12.5px;color:var(--g400);margin-bottom:14px;">Complete BSIT curriculum map showing all
+            subjects across all years and semesters.</p>
+          <div class="table-wrap" style="max-height:520px;overflow-y:auto;">
+            <table>
+              <thead>
+                <tr>
+                  <th>Code</th>
+                  <th>Description</th>
+                  <th>Prerequisite</th>
+                </tr>
+              </thead>
+              <tbody id="full-pros-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. PROFILE -->
+    <section id="profile" class="section">
+      <div class="ph">
+        <div class="ph-title">Academic Profile</div>
+        <div class="ph-sub">Your account details — managed by your Program Head</div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;max-width:640px;flex-wrap:wrap;">
+        <div class="card" style="display:flex;flex-direction:column;gap:14px;">
+          <div class="card-title"><i class="fa fa-user"></i> Account Details</div>
+          <div>
+            <div class="field-label">Full Name</div>
+            <div style="font-weight:700;font-size:14px;margin-top:4px;" id="prof-name">—</div>
+          </div>
+          <div>
+            <div class="field-label">Student ID</div>
+            <div style="font-weight:600;font-size:13px;margin-top:4px;" id="prof-id">—</div>
+          </div>
+          <div>
+            <div class="field-label">Email</div>
+            <div style="font-size:13px;color:var(--g500);margin-top:4px;" id="prof-email">—</div>
+          </div>
+        </div>
+        <div class="card" style="display:flex;flex-direction:column;gap:14px;">
+          <div class="card-title"><i class="fa fa-graduation-cap"></i> Academic Info</div>
+          <div>
+            <div class="field-label">Program</div>
+            <select id="profile-program" class="fc" disabled style="margin-top:4px;">
+              <option value="BSIT">BSIT</option>
+              <option value="BSEMC">BSEMC</option>
+            </select>
+          </div>
+          <div>
+            <div class="field-label">Year Level</div>
+            <select id="profile-year" class="fc" disabled style="margin-top:4px;">
+              <option value="1">1st Year</option>
+              <option value="2">2nd Year</option>
+              <option value="3">3rd Year</option>
+              <option value="4">4th Year</option>
+            </select>
+          </div>
+          <div>
+            <div class="field-label">Student Type</div>
+            <select id="profile-type" class="fc" disabled style="margin-top:4px;">
+              <option value="regular">Regular</option>
+              <option value="irregular">Irregular</option>
+              <option value="transferee">Transferee</option>
+            </select>
+          </div>
+          <div
+            style="padding:10px 12px;background:var(--g50);border:1px solid var(--g200);border-radius:8px;font-size:11.5px;color:var(--g400);">
+            <i class="fa fa-lock" style="color:var(--p500);"></i> Profile changes are restricted to Instructor access
+            only.
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+  <div id="toast-container"></div>
+
+  <!-- AI CHATBOT MODAL -->
+  <div class="chat-overlay" id="ai-chatbot-overlay">
+    <div class="chat-modal-box">
+      <div class="chat-modal-header">
+        <div class="chat-modal-title">
+          <i class="fa fa-robot"></i>
+          <span id="chatbot-title">AI Assistant</span>
+          <span class="ai-dot"></span>
+        </div>
+        <button class="chat-modal-close" onclick="document.getElementById('ai-chatbot-overlay').style.display='none'"><i
+            class="fa fa-times"></i></button>
+      </div>
+      <div class="chat-modal-msgs" id="chatbot-messages"></div>
+      <div class="chat-modal-input-row">
+        <input type="text" id="chatbot-input" class="fc" style="flex:1;" placeholder="Ask anything...">
+        <button class="btn btn-primary" id="chatbot-send-btn" style="padding:9px 16px;"><i
+            class="fa fa-paper-plane"></i></button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    const PAGE_TITLES = { home: 'Home', evaluations: 'My Reports', enrollment: 'Enrollment', profile: 'Profile' };
+
+    function startClock() {
+      function tick() { document.getElementById('tb-clock').textContent = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }); }
+      tick(); setInterval(tick, 1000);
+    }
+
+    window.showToast = function (msg, type = 'info') {
+      const c = document.getElementById('toast-container');
+      const d = document.createElement('div'); d.className = `toast-item ${type}`;
+      const icons = { success: 'fa-check-circle', error: 'fa-times-circle', warning: 'fa-triangle-exclamation', info: 'fa-circle-info' };
+      d.innerHTML = `<i class="fa ${icons[type] || icons.info}"></i>${msg}`;
+      c.appendChild(d);
+      setTimeout(() => { d.style.opacity = '0'; d.style.transform = 'translateX(20px)'; d.style.transition = 'all .3s'; setTimeout(() => d.remove(), 300); }, 3000);
+    };
+
+    window.goTo = function (sec) {
+      document.querySelector(`[data-sec="${sec}"]`)?.click();
+    };
+
+    document.querySelectorAll('.nav-link[data-sec]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const sec = btn.dataset.sec;
+        document.querySelectorAll('.nav-link').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById(sec)?.classList.add('active');
+        document.getElementById('topbar-title').textContent = PAGE_TITLES[sec] || sec;
+        if (window.innerWidth <= 768) document.getElementById('sidebar').classList.remove('open');
+      });
+    });
+
+    // AI Chatbot
+    window.openAIChatbot = function (title, intro) {
+      document.getElementById('chatbot-title').textContent = title;
+      window._chatbotTopic = title;
+      document.getElementById('ai-chatbot-overlay').style.display = 'flex';
+      document.getElementById('chatbot-messages').innerHTML = '';
+      addBubble(intro || 'Hello!', 'bot');
+      document.getElementById('chatbot-input').focus();
+    };
+    function addBubble(text, sender, id = null) {
+      const area = document.getElementById('chatbot-messages'); if (!area) return;
+      const wrap = document.createElement('div');
+      wrap.style.cssText = `display:flex;flex-direction:column;align-items:${sender === 'user' ? 'flex-end' : 'flex-start'};`;
+      const b = document.createElement('div'); if (id) b.id = id;
+      b.className = sender === 'user' ? 'cbot-bubble-user' : 'cbot-bubble-bot';
+      b.innerHTML = sender === 'bot' ? `<strong><i class="fa fa-robot"></i> EvalTrack AI</strong>${String(text || '...').replace(/\n/g, '<br>')}` : String(text || '').replace(/\n/g, '<br>');
+      wrap.appendChild(b); area.appendChild(wrap); area.scrollTop = area.scrollHeight;
+    }
+    function sendChat() {
+      const inp = document.getElementById('chatbot-input');
+      const txt = inp.value.trim(); if (!txt) return;
+      addBubble(txt, 'user'); inp.value = '';
+      const tid = 'cb' + Date.now();
+      addBubble('<span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span>', 'bot', tid);
+      fetch('ai_chat_handler.php', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ topic: window._chatbotTopic || 'General', query: txt }) })
+        .then(r => r.json()).then(d => { const b = document.getElementById(tid); if (b) b.innerHTML = `<strong><i class="fa fa-robot"></i> EvalTrack AI</strong>${String(d.reply || '').replace(/\n/g, '<br>')}`; area.scrollTop = area.scrollHeight; })
+        .catch(() => { const b = document.getElementById(tid); if (b) b.innerHTML = '<strong><i class="fa fa-exclamation-circle"></i> Error</strong>Could not connect. Check XAMPP internet connection.'; });
+      function area() { return document.getElementById('chatbot-messages'); }
+    }
+    document.getElementById('chatbot-send-btn').addEventListener('click', sendChat);
+    document.getElementById('chatbot-input').addEventListener('keypress', e => { if (e.key === 'Enter') sendChat(); });
+    document.getElementById('ai-chatbot-overlay').addEventListener('click', e => { if (e.target === document.getElementById('ai-chatbot-overlay')) document.getElementById('ai-chatbot-overlay').style.display = 'none'; });
+
+    document.addEventListener('DOMContentLoaded', () => {
+      startClock();
+      const user = checkAuth(['student', 'admin']);
+      if (!user) return;
+
+      document.getElementById('sidebar-name').textContent = user.name;
+      document.getElementById('sidebar-subrole').textContent = `${user.program || 'BSIT'} • ${user.student_type || 'Regular'}`;
+      document.getElementById('tb-user').textContent = user.name;
+      document.getElementById('user-avatar').textContent = user.name?.charAt(0)?.toUpperCase() || 'S';
+      document.getElementById('welcome-avatar').textContent = user.name?.charAt(0)?.toUpperCase() || 'S';
+      document.getElementById('welcome-name').textContent = user.name?.split(' ')[0] || 'Student';
+      document.getElementById('welcome-details').textContent = `${user.program || 'BSIT'} · Year ${user.year_level || 1} · ${user.student_type || 'Regular'} Student · ID: ${user.id}`;
+      document.getElementById('prof-name').textContent = user.name;
+      document.getElementById('prof-id').textContent = user.id;
+      document.getElementById('prof-email').textContent = user.email || '—';
+      document.getElementById('profile-program').value = user.program || 'BSIT';
+      document.getElementById('profile-year').value = user.year_level || '1';
+      document.getElementById('profile-type').value = user.student_type || 'regular';
+
+      // Semester dropdowns
+      generateSemesters().forEach(s => {
+        const o = document.createElement('option'); o.value = s; o.textContent = s;
+        document.getElementById('enroll-term').appendChild(o);
+      });
+
+      // Enrollment tabs
+      document.querySelectorAll('.enroll-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+          document.querySelectorAll('.enroll-tab').forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+          const v = tab.dataset.view;
+          document.getElementById('view-next').style.display = v === 'next' ? 'block' : 'none';
+          document.getElementById('view-full').style.display = v === 'full' ? 'block' : 'none';
+        });
+      });
+
+      // Full prospectus
+      const prosBody = document.getElementById('full-pros-body');
+      getProspectusArray().forEach(sub => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+      <td><strong>${sub.code}</strong></td>
+      <td>${sub.desc}</td>
+      <td><span class="badge ${sub.prereq === 'none' ? 'bg-green' : 'bg-gray'}">${sub.prereq}</span></td>`;
+        prosBody.appendChild(tr);
+      });
+
+      // Evaluations
+      let allEvals = [];
+      async function loadEvals() {
+        const tbody = document.getElementById('eval-body');
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--g400);"><i class="fa fa-spinner fa-spin"></i></td></tr>';
+        try {
+          const r = await fetch(`get_student_grades.php?student_id=${user.id}`);
+          allEvals = await r.json();
+          renderEvals();
+        } catch (e) {
+          tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--ember);">Failed to load. Check XAMPP.</td></tr>';
+        }
+      }
+
+      function renderEvals() {
+        const tbody = document.getElementById('eval-body');
+        const fS = document.getElementById('filter-search').value.toLowerCase();
+        const fSt = document.getElementById('filter-status').value;
+        const filtered = allEvals.filter(e => {
+          const mS = !fS || e.subject_code.toLowerCase().includes(fS) || (e.subject_desc || '').toLowerCase().includes(fS);
+          const mSt = !fSt || e.status === fSt;
+          return mS && mSt;
+        });
+        document.getElementById('eval-count').textContent = `${filtered.length} Records`;
+        tbody.innerHTML = '';
+        if (!filtered.length) { tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--g400);">No matching records.</td></tr>'; return; }
+        filtered.forEach(e => {
+          const pass = e.status === 'Passed';
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+        <td><span class="badge bg-purple">${e.sem || '—'}</span></td>
+        <td><strong>${e.subject_code || '—'}</strong></td>
+        <td><span style="font-size:12.5px;color:var(--g600);">${e.subject_desc || '—'}</span></td>
+        <td style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:900;font-size:15px;color:${pass ? 'var(--g800)' : 'var(--ember)'};">${e.grade || '—'}</td>
+        <td><span class="badge ${pass ? 'bg-green' : 'bg-red'}">${e.status || '—'}</span></td>
+        <td><div style="font-size:12.5px;background:linear-gradient(135deg, rgba(124,58,237,0.05), rgba(124,58,237,0.01));padding:10px 14px;border-radius:10px;border:1px solid rgba(124,58,237,0.15);max-width:280px;line-height:1.5;color:var(--g700);"><div style="font-size:9.5px;font-weight:800;color:var(--p500);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:4px;"><i class="fa fa-sparkles"></i> AI Insight</div>${e.ai_insight || '<span style="color:var(--g400);font-style:italic;">No AI feedback yet.</span>'}</div></td>
+      `;
+          tbody.appendChild(tr);
+        });
+      }
+
+      ['filter-search', 'filter-status'].forEach(id => {
+        const el = document.getElementById(id);
+        el.addEventListener('input', renderEvals);
+        el.addEventListener('change', renderEvals);
+      });
+      loadEvals();
+
+      // Eligible subjects
+      async function loadEligible() {
+        const tbody = document.getElementById('eligible-body');
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:2rem;color:var(--g400);"><i class="fa fa-spinner fa-spin"></i> Computing...</td></tr>';
+        try {
+          const r = await fetch(`get_enrollment_forecast.php?student_id=${user.id}`);
+          const d = await r.json();
+          tbody.innerHTML = '';
+          if (!d.success || !d.recommendations.length) {
+            tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:2rem;color:var(--g400);">No eligible subjects found. Consult your Program Head.</td></tr>';
+            return;
+          }
+          d.recommendations.forEach(s => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+          <td><strong>${s.code}</strong></td>
+          <td>${s.title}</td>
+          <td><span class="badge bg-gray">Yr${s.year || '?'} · Sem${s.sem || '?'}</span></td>
+          <td><span class="badge bg-green"><i class="fa fa-check"></i> Eligible</span></td>`;
+            tbody.appendChild(tr);
+          });
+        } catch (e) { document.getElementById('eligible-body').innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--ember);">Network error.</td></tr>'; }
+      }
+      document.getElementById('enroll-term').addEventListener('change', loadEligible);
+      loadEligible();
+    });
+  </script>
+</body>
+
+</html>

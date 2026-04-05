@@ -1,0 +1,37 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  background: #f4f8fc;
+  color: #1a2b3c;
+}
+
+.wrap {
+  max-width: 40rem;
+  margin: 3rem auto;
+  padding: 2rem;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 24px rgba(24, 95, 165, 0.12);
+}
+
+h1 {
+  color: #185fa5;
+  margin: 0 0 0.5rem;
+}
+
+.ports {
+  color: #5a6b7c;
+  margin: 0 0 1rem;
+}
+
+.ok {
+  color: #2d7a3e;
+}
+
+.bad {
+  color: #b00020;
+}
