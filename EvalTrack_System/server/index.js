@@ -395,6 +395,21 @@ const bootstrapSQLiteData = () => {
     const insertProgram = db.prepare('INSERT OR IGNORE INTO programs (code, name, description) VALUES (?, ?, ?)');
     insertProgram.run('BSIT', 'Bachelor of Science in Information Technology', 'BSIT Program');
     console.log('Bootstrapped programs into SQLite');
+    
+    // Insert default users (admin, program head, instructor)
+    const insertUser = db.prepare(`INSERT OR IGNORE INTO users 
+        (id, name, email, password, role, program, status, must_change_password) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)`);
+    
+    // Default admin user - password: "admin123"
+    insertUser.run('admin-001', 'System Admin', 'admin@jmc.edu.ph', 
+        '$2a$10$N9qo8uLOickgx2ZMRZoMy.MqrqC5BpY1FnbEYmE8oZwDdTM8I1KWq', 'admin', 'BSIT', 'Active', 0);
+    
+    // Default program head - password: "password"
+    insertUser.run('ph-001', 'Jerwin Carreon', 'jerwin.carreon@jmc.edu.ph', 
+        '$2a$10$N9qo8uLOickgx2ZMRZoMy.MqrqC5BpY1FnbEYmE8oZwDdTM8I1KWq', 'program_head', 'BSIT', 'Active', 0);
+    
+    console.log('Bootstrapped default users into SQLite');
 };
 
 const addSQLiteCompatibility = () => {
