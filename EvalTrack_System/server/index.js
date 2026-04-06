@@ -821,7 +821,7 @@ app.post('/api/auth/login', (req, res) => {
         query = "SELECT * FROM users WHERE role IN ('admin', 'dean') AND password = ?";
         params = [password];
     } else {
-        query = 'SELECT * FROM users WHERE (email = ? OR id = ?)';
+        query = 'SELECT * FROM users WHERE (LOWER(email) = LOWER(?) OR id = ?)';
         params = [email, email];
     }
     
