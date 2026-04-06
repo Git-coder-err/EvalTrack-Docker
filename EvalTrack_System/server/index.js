@@ -126,15 +126,37 @@ const initDatabase = () => {
         console.log('✓ Using SQLite database...');
         isSQLite = true;
         
-        const dbPath = process.env.SQLITE_PATH || './evaltrack.db';
+        // Check if we should reset the database (for fixing bad data on Render)
+        if (process.env.RESET_DB === 'true') {
+            console.log('RESET_DB is true - deleting existing SQLite database...');
+            try {
+                const dbPath = path.join(__dirname, 'evaltrack.db');
+                if (fs.existsSync(dbPath)) {
+                    fs.unlinkSync(dbPath);
+                    console.log('Deleted existing database file');
+                }
+                const walPath = path.join(__dirname, 'evaltrack.db-shm');
+                const walPath2 = path.join(__dirname, 'evaltrack.db-wal');
+                if (fs.existsSync(walPath)) fs.unlinkSync(walPath);
+                if (fs.existsSync(walPath2)) fs.unlinkSync(walPath2);
+            } catch (err) {
+                console.error('Error deleting database:', err.message);
+            }
+        }
+        
+        // Initialize SQLite database
+        const dbPath = path.join(__dirname, 'evaltrack.db');
+        console.log('SQLite database path:', dbPath);
+        
+        const Database = require('better-sqlite3');
         db = new Database(dbPath);
+        console.log('SQLite database initialized at:', dbPath);
         
         // Enable WAL mode for better concurrency
         db.pragma('journal_mode = WAL');
         
         // Initialize SQLite tables
         initSQLiteTables();
-        console.log('SQLite database initialized at:', dbPath);
         return;
     } else {
         console.log('✗ Falling back to MySQL...');
