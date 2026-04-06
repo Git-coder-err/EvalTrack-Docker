@@ -431,7 +431,7 @@
         if (!currentUser) return;
         
         // 1. Load standing
-        const standingRes = await authFetch(`http://localhost:5000/api/standing/student/${currentUser.id}`);
+        const standingRes = await authFetch(`https://evaltrack-system.onrender.com/api/standing/student/${currentUser.id}`);
         const standingData = await standingRes.json();
         
         if (standingData.standing === 'Graduated') {
@@ -440,7 +440,7 @@
         }
         
         // 2. Load grades for stats
-        const response = await authFetch('http://localhost:5000/api/evaluations');
+        const response = await authFetch('https://evaltrack-system.onrender.com/api/evaluations');
         const grades = await response.json();
         
         if (Array.isArray(grades)) {
@@ -467,7 +467,7 @@
         }
         
         // 3. Load enrollment for dashboard
-        const enrollRes = await authFetch(`http://localhost:5000/api/enrollment/current/${currentUser.id}`);
+        const enrollRes = await authFetch(`https://evaltrack-system.onrender.com/api/enrollment/current/${currentUser.id}`);
         const enrollment = await enrollRes.json();
         
         if (Array.isArray(enrollment) && enrollment.length > 0) {
@@ -483,7 +483,7 @@
     // Load grades
     async function loadGrades() {
       try {
-        const response = await authFetch('http://localhost:5000/api/evaluations');
+        const response = await authFetch('https://evaltrack-system.onrender.com/api/evaluations');
         const grades = await response.json();
         
         studentGrades = grades;
@@ -551,7 +551,7 @@
     // Load enrollment
     async function loadEnrollment() {
       try {
-        const response = await authFetch(`http://localhost:5000/api/enrollment/current/${currentUser.id}`);
+        const response = await authFetch(`https://evaltrack-system.onrender.com/api/enrollment/current/${currentUser.id}`);
         const enrollment = await response.json();
         
         updateEnrollmentDisplay(enrollment);
@@ -752,7 +752,7 @@
       }
       
       try {
-        const response = await authFetch('http://localhost:5000/api/auth/change-password', {
+        const response = await authFetch('https://evaltrack-system.onrender.com/api/auth/change-password', {
           method: 'POST',
           body: JSON.stringify({
             id: currentUser.id,

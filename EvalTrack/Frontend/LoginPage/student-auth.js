@@ -44,7 +44,7 @@ document.getElementById('studentLoginForm')?.addEventListener('submit', async (e
   submitBtn.disabled = true;
   
   try {
-    const response = await fetch('http://localhost:5000/api/auth/login', {
+    const response = await fetch('https://evaltrack-system.onrender.com/api/auth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ 
@@ -103,7 +103,7 @@ async function signInWithGoogle() {
     }
 
     // First, try to login with Google
-    const loginResponse = await fetch('http://localhost:5000/api/auth/login', {
+    const loginResponse = await fetch('https://evaltrack-system.onrender.com/api/auth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ 
@@ -185,7 +185,7 @@ async function confirmLinkAccount() {
   }
   
   try {
-    const response = await fetch('http://localhost:5000/api/auth/link-account', {
+    const response = await fetch('https://evaltrack-system.onrender.com/api/auth/link-account', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -224,7 +224,7 @@ async function sendVerificationEmail() {
   if (!pendingLinkData) return;
   
   try {
-    const response = await fetch('http://localhost:5000/api/auth/send-link-verification', {
+    const response = await fetch('https://evaltrack-system.onrender.com/api/auth/send-link-verification', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -278,7 +278,7 @@ document.getElementById('forgotPasswordForm')?.addEventListener('submit', async 
   submitBtn.disabled = true;
   
   try {
-    const response = await fetch('http://localhost:5000/api/auth/forgot-password', {
+    const response = await fetch('https://evaltrack-system.onrender.com/api/auth/forgot-password', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, role: 'student' })

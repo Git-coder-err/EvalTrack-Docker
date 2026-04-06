@@ -1440,7 +1440,8 @@ function addChatBubble(text, sender, id = null) {
 // ===== AI helpers =====
 async function callAiChat(payload) {
   // Point directly to Node backend on port 5000
-  const url = 'http://localhost:5000/api/ai/chat';
+  const API_BASE_URL = 'https://evaltrack-system.onrender.com/api';
+  const url = `${API_BASE_URL}/ai/chat`;
   // Use authFetch for authenticated request with JWT
   const res = await authFetch(url, {
     method: 'POST',
@@ -1793,10 +1794,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     try {
       // Try multiple possible server addresses
       const baseUrls = [
-        'http://127.0.0.1:5000',
-        'http://localhost:5000',
-        'http://127.0.0.1:3000',
-        'http://localhost:3000'
+        'https://evaltrack-system.onrender.com'
       ];
       
       let r = null;
@@ -1907,7 +1905,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (parentCard) parentCard.style.overflow = 'visible';
     
     try {
-      const url = `http://localhost:5000/api/students/search?query=${encodeURIComponent(query)}`;
+      const url = `https://evaltrack-system.onrender.com/api/students/search?query=${encodeURIComponent(query)}`;
       console.log('Fetching URL:', url);
       
       // Use authFetch for authenticated request

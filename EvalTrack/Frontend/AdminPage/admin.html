@@ -405,7 +405,7 @@ async function loadDashboardStats() {
 // Load users - handles PHP-style array response
 async function loadUsers() {
   try {
-    const response = await authFetch('http://localhost:5000/api/auth/users');
+    const response = await authFetch('https://evaltrack-system.onrender.com/api/auth/users');
     const users = await response.json();
     
     // Backend returns array directly (PHP-style), not {success, data} object
@@ -451,7 +451,8 @@ async function loadUsers() {
 // Load reports
 async function loadReports() {
   try {
-    const response = await fetch('http://localhost:5000/api/evaluations');
+    const API_BASE_URL = 'https://evaltrack-system.onrender.com/api';
+    const response = await fetch(`${API_BASE_URL}/evaluations`);
     const evaluations = await response.json();
     
     document.getElementById('total-evaluations').textContent = evaluations.length;
@@ -497,7 +498,7 @@ async function addUser() {
   };
 
   try {
-    const response = await authFetch('http://localhost:5000/api/auth/register', {
+    const response = await authFetch('https://evaltrack-system.onrender.com/api/auth/register', {
       method: 'POST',
       body: JSON.stringify(userData)
     });

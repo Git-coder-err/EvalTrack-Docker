@@ -103,7 +103,7 @@ document.getElementById('facultyLoginForm').addEventListener('submit', async (e)
   submitBtn.disabled = true;
 
   try {
-    const response = await fetch('http://localhost:5000/api/auth/login', {
+    const response = await fetch('https://evaltrack-system.onrender.com/api/auth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password })
@@ -174,7 +174,7 @@ async function signInWithGoogle() {
       throw new Error('Google account did not return an email address.');
     }
 
-    const response = await fetch('http://localhost:5000/api/auth/login', {
+    const response = await fetch('https://evaltrack-system.onrender.com/api/auth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email: user.email, isGoogleLogin: true })

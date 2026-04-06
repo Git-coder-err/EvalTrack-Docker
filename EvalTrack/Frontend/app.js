@@ -126,7 +126,7 @@ function initDB() {
 }
 
 // --- AUTHENTICATION (NODE.JS BACKEND VERSION) ---
-const API_BASE_URL = 'http://localhost:5000/api';
+const API_BASE_URL = 'https://evaltrack-system.onrender.com/api';
 
 async function login(email, password) {
     try {
@@ -179,7 +179,7 @@ async function login(email, password) {
         }
     } catch (err) {
         console.error("Login Error:", err);
-        return { success: false, message: 'Connection to server failed. Ensure EvalTrack_System Node.js server is running on port 5001.' };
+        return { success: false, message: 'Connection to server failed. Backend service may be temporarily unavailable.' };
     }
 }
 
