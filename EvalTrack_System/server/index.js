@@ -505,17 +505,9 @@ const addSQLiteCompatibility = () => {
         }
         
         try {
-            let sqliteSql = sql;
-            const paramCount = (sql.match(/\?/g) || []).length;
-            
-            // Convert MySQL ? placeholders to SQLite numbered placeholders
-            if (paramCount > 0) {
-                let paramIndex = 1;
-                sqliteSql = sql.replace(/\?/g, () => `?${paramIndex++}`);
-            }
-            
-            if (sqliteSql.trim().toLowerCase().startsWith('select')) {
-                const stmt = db.prepare(sqliteSql);
+            // Use SQL as-is with ? placeholders - better-sqlite3 handles them natively
+            if (sql.trim().toLowerCase().startsWith('select')) {
+                const stmt = db.prepare(sql);
                 let results;
                 if (params.length > 0) {
                     results = stmt.all(...params);
@@ -524,7 +516,7 @@ const addSQLiteCompatibility = () => {
                 }
                 callback(null, results);
             } else {
-                const stmt = db.prepare(sqliteSql);
+                const stmt = db.prepare(sql);
                 let result;
                 if (params.length > 0) {
                     result = stmt.run(...params);
