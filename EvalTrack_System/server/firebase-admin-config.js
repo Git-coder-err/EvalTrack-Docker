@@ -18,8 +18,24 @@ try {
   // Save it as firebase-service-account.json in this directory
   
   try {
-    // Try to load service account key
-    const serviceAccount = require('./firebase-service-account.json');
+    // Try to load service account key from file or environment variable
+    let serviceAccount;
+    
+    // First, try to load from environment variable (for Render deployment)
+    if (process.env.FIREBASE_SERVICE_ACCOUNT) {
+      try {
+        serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+        console.log('Firebase Admin: Loaded from FIREBASE_SERVICE_ACCOUNT environment variable');
+      } catch (envError) {
+        console.log('Firebase Admin: Failed to parse FIREBASE_SERVICE_ACCOUNT env var:', envError.message);
+      }
+    }
+    
+    // Fall back to file if env var not set
+    if (!serviceAccount) {
+      serviceAccount = require('./firebase-service-account.json');
+      console.log('Firebase Admin: Loaded from firebase-service-account.json file');
+    }
     
     admin.initializeApp({
       credential: admin.credential.cert(serviceAccount),
