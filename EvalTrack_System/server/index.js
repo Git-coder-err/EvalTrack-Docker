@@ -51,11 +51,45 @@ console.log('isProduction:', isProduction);
 console.log('allowedOrigins:', allowedOrigins);
 console.log('==========================');
 
+// CORS middleware with function-based origin checking
 app.use(cors({
-    origin: allowedOrigins,
+    origin: function (origin, callback) {
+        // Allow requests with no origin (like mobile apps or curl requests)
+        if (!origin) return callback(null, true);
+        
+        console.log('CORS check - Request origin:', origin);
+        console.log('CORS check - Allowed origins:', allowedOrigins);
+        
+        // Check if origin matches allowed origins
+        if (allowedOrigins === false) {
+            // In production with no allowed origins set, be strict
+            console.log('CORS: No allowed origins configured');
+            return callback(new Error('CORS not configured'), false);
+        }
+        
+        // Check for exact match or if origin is in allowed list
+        if (allowedOrigins.includes(origin)) {
+            console.log('CORS: Origin allowed:', origin);
+            return callback(null, true);
+        }
+        
+        // Check without www prefix
+        const originWithoutWww = origin.replace(/^https:\/\/www\./, 'https://');
+        const originWithWww = origin.replace(/^https:\/\//, 'https://www.');
+        
+        if (allowedOrigins.includes(originWithoutWww) || allowedOrigins.includes(originWithWww)) {
+            console.log('CORS: Origin allowed (www variant):', origin);
+            return callback(null, true);
+        }
+        
+        console.log('CORS: Origin NOT allowed:', origin);
+        return callback(new Error('Not allowed by CORS'), false);
+    },
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'x-user-id'],
-    credentials: true
+    credentials: true,
+    preflightContinue: false,
+    optionsSuccessStatus: 204
 }));
 
 // COOP Headers for Firebase Auth popup/redirect support
