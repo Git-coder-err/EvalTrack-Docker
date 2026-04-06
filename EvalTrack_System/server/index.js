@@ -274,6 +274,26 @@ const initSQLiteTables = () => {
         bootstrapSQLiteData();
     }
     
+    // Bootstrap default users if empty
+    const userCount = db.prepare('SELECT COUNT(*) as count FROM users').get();
+    if (userCount.count === 0) {
+        console.log('Bootstrapping default users into SQLite...');
+        
+        const insertUser = db.prepare(`INSERT OR IGNORE INTO users 
+            (id, name, email, password, role, program, status, must_change_password) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)`);
+        
+        // Default admin user - password: "admin123"
+        insertUser.run('admin-001', 'System Admin', 'admin@jmc.edu.ph', 
+            '$2a$10$N9qo8uLOickgx2ZMRZoMy.MqrqC5BpY1FnbEYmE8oZwDdTM8I1KWq', 'admin', 'BSIT', 'Active', 0);
+        
+        // Default program head - password: "password"
+        insertUser.run('ph-001', 'Jerwin Carreon', 'jerwin.carreon@jmc.edu.ph', 
+            '$2a$10$N9qo8uLOickgx2ZMRZoMy.MqrqC5BpY1FnbEYmE8oZwDdTM8I1KWq', 'program_head', 'BSIT', 'Active', 0);
+        
+        console.log('Bootstrapped default users into SQLite');
+    }
+    
     // Add SQLite compatibility methods
     addSQLiteCompatibility();
 };
