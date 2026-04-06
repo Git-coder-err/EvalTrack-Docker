@@ -43,8 +43,8 @@ console.log('NODE_ENV:', process.env.NODE_ENV);
 console.log('ALLOWED_ORIGINS:', process.env.ALLOWED_ORIGINS);
 
 const isProduction = process.env.NODE_ENV?.toString().toLowerCase().trim() === 'production';
-const allowedOrigins = isProduction 
-    ? (process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',') : false)
+let allowedOrigins = isProduction 
+    ? (process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',').map(o => o.trim().replace(/\/$/, '')) : false)
     : ['http://localhost:3000', 'http://localhost:3001', 'http://127.0.0.1:3000', 'http://127.0.0.1:3001', 'http://localhost', 'http://127.0.0.1'];
 
 console.log('isProduction:', isProduction);
