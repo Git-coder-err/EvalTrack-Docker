@@ -64,12 +64,23 @@ let isSQLite = false;
 
 // Initialize SQLite for production (Render) or MySQL for local development
 const initDatabase = () => {
+    // Debug: Log all relevant env vars
+    console.log('=== DATABASE CONFIGURATION ===');
+    console.log('USE_SQLITE env var:', process.env.USE_SQLITE);
+    console.log('USE_SQLITE type:', typeof process.env.USE_SQLITE);
+    console.log('NODE_ENV:', process.env.NODE_ENV);
+    console.log('DB_HOST:', process.env.DB_HOST);
+    console.log('==============================');
+    
     // Check if we should use SQLite (for Render deployment without external DB)
     const useSQLite = process.env.USE_SQLITE?.toString().toLowerCase().trim();
     const isProduction = process.env.NODE_ENV?.toString().toLowerCase().trim() === 'production';
     
+    console.log('Parsed useSQLite:', useSQLite);
+    console.log('isProduction:', isProduction);
+    
     if (useSQLite === 'true' || (!process.env.DB_HOST && isProduction)) {
-        console.log('Using SQLite database...');
+        console.log('✓ Using SQLite database...');
         isSQLite = true;
         
         const dbPath = process.env.SQLITE_PATH || './evaltrack.db';
@@ -82,10 +93,12 @@ const initDatabase = () => {
         initSQLiteTables();
         console.log('SQLite database initialized at:', dbPath);
         return;
+    } else {
+        console.log('✗ Falling back to MySQL...');
+        console.log('Reason: useSQLite !== "true" && (DB_HOST exists or not production)');
+        // Otherwise use MySQL
+        connectWithRetry(process.env.DB_HOST || 'localhost');
     }
-    
-    // Otherwise use MySQL
-    connectWithRetry(process.env.DB_HOST || 'localhost');
 };
 
 const initSQLiteTables = () => {
