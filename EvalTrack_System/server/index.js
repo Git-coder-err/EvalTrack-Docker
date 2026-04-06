@@ -3342,6 +3342,20 @@ function generateEvaluationReport(student, results, recommendations, gwa, standi
     return report;
 }
 
+// --- STATIC FILES & SPA ROUTING ---
+// Serve static frontend files (must be after all API routes)
+app.use(express.static(path.join(__dirname, '..', '..', 'EvalTrack', 'Frontend')));
+
+// Handle SPA routing - serve index.html for all non-API, non-file routes
+app.get('*', (req, res) => {
+    // Don't interfere with API routes or file requests
+    if (req.path.startsWith('/api/') || req.path.match(/\.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$/)) {
+        return res.status(404).send('Not found');
+    }
+    // Serve the frontend's index.html for all other routes (SPA behavior)
+    res.sendFile(path.join(__dirname, '..', '..', 'EvalTrack', 'Frontend', 'index.html'));
+});
+
 // --- START SERVER ---
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
