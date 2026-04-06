@@ -803,9 +803,12 @@ app.post('/api/auth/login', (req, res) => {
     }
 
     db.query(query, params, async (err, results) => {
-        if (err) return res.status(500).json({ success: false, message: 'Server error' });
+        if (err) {
+            console.error('Login database error:', err);
+            return res.status(500).json({ success: false, message: 'Server error: ' + err.message });
+        }
         
-        if (results.length === 0) {
+        if (!results || results.length === 0) {
             return res.status(401).json({ success: false, message: 'Invalid username/email or password.' });
         }
 
