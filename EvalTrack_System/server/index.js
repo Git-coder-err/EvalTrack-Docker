@@ -5,7 +5,17 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { requestGroq } = require('./groq-rotator');
+
+// Groq AI - Made optional so server starts without API keys
+let requestGroq;
+try {
+  const groqModule = require('./groq-rotator');
+  requestGroq = groqModule.requestGroq;
+} catch (error) {
+  console.log('Groq AI not available:', error.message);
+  requestGroq = null;
+}
+
 const fs = require('fs');
 const path = require('path');
 
@@ -913,6 +923,11 @@ app.post('/api/evaluations', async (req, res) => {
 // AI Insight generator - Real AI via Groq
 async function generateAIInsight(studentName, subjectCode, grade, status) {
     try {
+        // Check if AI service is available
+        if (!requestGroq) {
+            throw new Error('AI service not configured');
+        }
+        
         const systemPrompt = "You are an AI Academic Counselor at JMC. Provide a concise (max 30 words), personalized academic remark for a student based on their grade. Be professional and encouraging.";
         const userPrompt = `Student Name: ${studentName}, Subject: ${subjectCode}, Grade: ${grade}, Status: ${status}.`;
         
@@ -1321,6 +1336,19 @@ All Academic History: ${JSON.stringify(allGrades)}
 
 Generate the full academic evaluation and enrollment recommendation report.`;
 
+    // Check if AI service is available
+    if (!requestGroq) {
+      console.warn('[AI_EVALUATION] AI service not configured, using fallback report.');
+      const fallbackReport = await buildFallbackReport(studentProfile[0], allGrades, grades);
+      return res.json({ 
+        success: true, 
+        report: {
+          ...fallbackReport,
+          fallback: true
+        }
+      });
+    }
+
     const aiResponse = await requestGroq([
       { role: "system", content: systemPrompt },
       { role: "user", content: userPrompt }
@@ -1684,6 +1712,14 @@ End.`;
   ];
 
   try {
+    // Check if AI service is available
+    if (!requestGroq) {
+      return res.status(503).json({ 
+        success: false, 
+        message: 'AI service not configured. Please contact administrator.' 
+      });
+    }
+
     // Use the Groq rotator with automatic key rotation
     const result = await requestGroq(messages, { 
       model: 'llama-3.3-70b-versatile',
