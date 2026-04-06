@@ -805,12 +805,19 @@ app.use(express.urlencoded({ extended: true }));
 
 // Login - accepts both JSON and FormData (like PHP reference)
 app.post('/api/auth/login', (req, res) => {
-    // Support both JSON and FormData
+    console.log('=== LOGIN REQUEST ===');
+    console.log('Request body:', req.body);
+    
     const email = req.body.email || req.body.id || '';
     const password = req.body.password || '';
     const isGoogleLogin = req.body.isGoogleLogin || false;
     
+    console.log('Email:', email);
+    console.log('Password provided:', !!password);
+    console.log('Is Google Login:', isGoogleLogin);
+    
     if (!db) {
+        console.log('ERROR: Database not connected');
         return res.status(503).json({ success: false, message: 'Database connecting, please try again in a few seconds' });
     }
     
@@ -819,14 +826,15 @@ app.post('/api/auth/login', (req, res) => {
     let params;
     
     if (email.toLowerCase() === 'admin') {
-        // Check specifically for admin users with plaintext password (like PHP)
         query = "SELECT * FROM users WHERE role IN ('admin', 'dean') AND password = ?";
         params = [password];
     } else {
-        // Normal search by email or student ID
         query = 'SELECT * FROM users WHERE (email = ? OR id = ?)';
         params = [email, email];
     }
+    
+    console.log('Query:', query);
+    console.log('Params:', params);
 
     db.query(query, params, async (err, results) => {
         if (err) {
@@ -834,26 +842,34 @@ app.post('/api/auth/login', (req, res) => {
             return res.status(500).json({ success: false, message: 'Server error: ' + err.message });
         }
         
+        console.log('Query results:', results ? results.length : 0, 'rows');
+        
         if (!results || results.length === 0) {
             return res.status(401).json({ success: false, message: 'Invalid username/email or password.' });
         }
 
         const user = results[0];
+        console.log('User found:', user.email, 'Role:', user.role);
         
-        // Check if account is active
         if (user.status !== 'Active') {
             return res.status(401).json({ success: false, message: 'Your account is currently inactive.' });
         }
         
-        // For non-admin shortcut and non-Google login, verify password with bcrypt
         if (email.toLowerCase() !== 'admin' && !isGoogleLogin) {
-            const bcrypt = require('bcryptjs');
-            const isMatch = await bcrypt.compare(password, user.password);
-            if (!isMatch) {
-                return res.status(401).json({ success: false, message: 'Invalid username/email or password.' });
+            try {
+                const bcrypt = require('bcryptjs');
+                const isMatch = await bcrypt.compare(password, user.password);
+                console.log('Password match:', isMatch);
+                if (!isMatch) {
+                    return res.status(401).json({ success: false, message: 'Invalid username/email or password.' });
+                }
+            } catch (bcryptErr) {
+                console.error('Bcrypt error:', bcryptErr);
+                return res.status(500).json({ success: false, message: 'Password verification error' });
             }
         }
         
+        console.log('Login successful for:', user.email);
         handleLoginSuccess(user, res);
     });
 });
