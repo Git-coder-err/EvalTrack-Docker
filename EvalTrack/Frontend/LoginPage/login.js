@@ -167,12 +167,17 @@ async function signInWithGoogle() {
     provider.addScope('email');
     provider.addScope('profile');
 
+    console.log('[Google Sign In] Opening popup...');
     const result = await firebase.auth().signInWithPopup(provider);
     const user = result.user;
+
+    console.log('[Google Sign In] User:', user);
 
     if (!user || !user.email) {
       throw new Error('Google account did not return an email address.');
     }
+
+    console.log('[Google Sign In] Success, email:', user.email);
 
     const response = await fetch('https://evaltrack-system.onrender.com/api/auth/login', {
       method: 'POST',
@@ -181,50 +186,36 @@ async function signInWithGoogle() {
     });
 
     const data = await response.json();
+    console.log('[Google Sign In] Backend response:', data);
 
     if (data.success) {
-      // Store in ALL storage variants so all pages can find it
       const userJSON = JSON.stringify(data.user);
       const token = data.token || '';
       
-      // Standardize on currentUser and authToken
       localStorage.setItem('currentUser', userJSON);
-      localStorage.setItem('user', userJSON);
-      sessionStorage.setItem('currentUser', userJSON);
-      sessionStorage.setItem('user', userJSON);
-      
       localStorage.setItem('authToken', token);
-      localStorage.setItem('token', token);
+      sessionStorage.setItem('currentUser', userJSON);
       sessionStorage.setItem('authToken', token);
-      sessionStorage.setItem('token', token);
 
       showToast('Login successful! Redirecting...', 'success');
       setTimeout(() => {
-        const role = (data.user.role || '').toLowerCase().replace(/[\s\-_]/g, '');
-        if (role === 'admin' || role === 'dean') {
-          window.location.href = '../AdminPage/admin.html';
-        } else if (role === 'programhead' || role === 'instructor' || role === 'faculty') {
-          window.location.href = '../ProgramHeadPage/ProgramHead.html';
-        } else if (role === 'student') {
-          window.location.href = '../StudentPage/student.html';
-        } else {
-          window.location.href = '../LoginPage/login.html';
-        }
+        window.location.href = '../StudentPage/student.html';
       }, 1000);
       return;
     }
 
+    // User not found - redirect to registration
     sessionStorage.setItem('tempGoogleUser', JSON.stringify({
       email: user.email,
       name: user.displayName || '',
       uid: user.uid,
       photoURL: user.photoURL || ''
     }));
-    showToast('Google sign-in successful. Complete your student profile now.', 'info');
+    showToast('New student! Please complete your profile.', 'info');
     window.location.href = '../RegisterPage/register.html';
   } catch (error) {
-    console.error('Google Sign In error:', error);
-    showError('student', 'Google Sign In failed: ' + (error.message || 'Please try again.'));
+    console.error('[Google Sign In] Error:', error);
+    showError('student', 'Google Sign In failed: ' + error.message);
   }
 }
 
