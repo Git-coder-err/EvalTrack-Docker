@@ -2,7 +2,7 @@
 
 const APP_NAME = "EvalTrack";
 
-br// --- PROSPECTUS DATA (OFFICIAL JMC BSIT CURRICULUM) ---
+// --- PROSPECTUS DATA (OFFICIAL JMC BSIT CURRICULUM) ---
 // Ensure the global BSIT_PROSPECTUS exists and avoid redeclaring it if this script
 // is loaded multiple times or another bundle defines it.
 if (typeof window.BSIT_PROSPECTUS === 'undefined') {
