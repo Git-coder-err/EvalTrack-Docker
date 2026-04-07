@@ -1,7 +1,6 @@
 require('dotenv').config();
 const express = require('express');
 const mysql = require('mysql2');
-const Database = require('better-sqlite3');
 const path = require('path');
 const cors = require('cors');
 const bodyParser = require('body-parser');
@@ -43,9 +42,20 @@ console.log('NODE_ENV:', process.env.NODE_ENV);
 console.log('ALLOWED_ORIGINS:', process.env.ALLOWED_ORIGINS);
 
 const isProduction = process.env.NODE_ENV?.toString().toLowerCase().trim() === 'production';
+// Default origins for local dev - always include these
+const defaultOrigins = [
+    'http://localhost:3000', 
+    'http://localhost:3001', 
+    'http://127.0.0.1:3000', 
+    'http://127.0.0.1:3001', 
+    'http://localhost', 
+    'http://127.0.0.1'
+];
 let allowedOrigins = isProduction 
-    ? (process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',').map(o => o.trim().replace(/\/$/, '')) : false)
-    : ['http://localhost:3000', 'http://localhost:3001', 'http://127.0.0.1:3000', 'http://127.0.0.1:3001', 'http://localhost', 'http://127.0.0.1'];
+    ? (process.env.ALLOWED_ORIGINS 
+        ? [...defaultOrigins, ...process.env.ALLOWED_ORIGINS.split(',').map(o => o.trim().replace(/\/$/, ''))]
+        : defaultOrigins)
+    : defaultOrigins;
 
 console.log('isProduction:', isProduction);
 console.log('allowedOrigins:', allowedOrigins);
@@ -3397,12 +3407,13 @@ app.get('/RegisterPage/:file', (req, res) => {
 });
 
 // Handle root SPA routing - serve index.html for root and unknown paths
-app.get('*', (req, res) => {
+// Use a middleware that checks if the request wasn't handled by previous routes
+app.use((req, res, next) => {
     // Don't interfere with API routes
     if (req.path.startsWith('/api/')) {
         return res.status(404).json({ success: false, message: 'API endpoint not found' });
     }
-    // Serve the frontend's index.html for root path
+    // Serve the frontend's index.html for all other routes (SPA behavior)
     res.sendFile(path.join(frontendPath, 'index.html'));
 });
 
