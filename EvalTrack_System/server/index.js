@@ -154,9 +154,10 @@ app.use(cors({
 }));
 
 // COOP Headers for Firebase Auth popup/redirect support
+// Changed to unsafe-none to allow cross-origin popup communication for Google Sign In
 app.use((req, res, next) => {
-    res.setHeader('Cross-Origin-Opener-Policy', 'same-origin-allow-popups');
-    res.setHeader('Cross-Origin-Embedder-Policy', 'require-corp');
+    res.setHeader('Cross-Origin-Opener-Policy', 'unsafe-none');
+    res.setHeader('Cross-Origin-Embedder-Policy', 'unsafe-none');
     next();
 });
 
