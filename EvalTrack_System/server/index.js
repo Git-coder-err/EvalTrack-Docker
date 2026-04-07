@@ -49,7 +49,9 @@ const defaultOrigins = [
     'http://127.0.0.1:3000', 
     'http://127.0.0.1:3001', 
     'http://localhost', 
-    'http://127.0.0.1'
+    'http://127.0.0.1',
+    'https://evaltrack-system.onrender.com',
+    'https://evaltrack-system.netlify.app'
 ];
 let allowedOrigins = isProduction 
     ? (process.env.ALLOWED_ORIGINS 
@@ -3354,8 +3356,49 @@ function generateEvaluationReport(student, results, recommendations, gwa, standi
 
 // --- STATIC FILES & SPA ROUTING ---
 // Determine frontend path - works both locally and on Render
-const frontendPath = process.env.FRONTEND_PATH || path.join(__dirname, '..', '..', 'EvalTrack', 'Frontend');
-console.log('Serving static files from:', frontendPath);
+let frontendPath;
+
+// Try multiple possible paths
+const possiblePaths = [
+    process.env.FRONTEND_PATH,  // Explicit env var
+    path.join(__dirname, '..', '..', 'EvalTrack', 'Frontend'),  // Local dev structure
+    path.join(__dirname, '..', '..', '..', 'EvalTrack', 'Frontend'),  // One level deeper
+    path.join(process.cwd(), 'EvalTrack', 'Frontend'),  // From cwd
+    path.join(process.cwd(), '..', 'EvalTrack', 'Frontend'),  // From cwd parent
+    '/opt/render/project/src/EvalTrack/Frontend',  // Common Render path
+];
+
+// Find first path that exists
+for (const testPath of possiblePaths) {
+    if (testPath && fs.existsSync(testPath)) {
+        frontendPath = testPath;
+        console.log('✓ Found frontend at:', frontendPath);
+        break;
+    }
+}
+
+// Fallback to default if none found
+if (!frontendPath) {
+    frontendPath = process.env.FRONTEND_PATH || path.join(__dirname, '..', '..', 'EvalTrack', 'Frontend');
+    console.log('⚠ Using default frontend path (may not exist):', frontendPath);
+}
+
+// Log directory contents for debugging
+console.log('Checking frontend directory...');
+try {
+    if (fs.existsSync(frontendPath)) {
+        const contents = fs.readdirSync(frontendPath);
+        console.log('Frontend directory contents:', contents);
+    } else {
+        console.log('Frontend directory does NOT exist at:', frontendPath);
+        // Try to find EvalTrack directory anywhere
+        const cwd = process.cwd();
+        console.log('Current working directory:', cwd);
+        console.log('__dirname:', __dirname);
+    }
+} catch (err) {
+    console.error('Error reading frontend directory:', err.message);
+}
 
 // Serve static frontend files (must be after all API routes)
 app.use(express.static(frontendPath));
@@ -3363,46 +3406,51 @@ app.use(express.static(frontendPath));
 // Handle subdirectory routes - serve actual HTML files if they exist
 app.get('/LoginPage/:file', (req, res) => {
     const filePath = path.join(frontendPath, 'LoginPage', req.params.file);
+    console.log('LoginPage request for:', req.params.file, '-> checking:', filePath);
     if (fs.existsSync(filePath)) {
         res.sendFile(filePath);
     } else {
-        res.status(404).send('Not found');
+        res.status(404).send('Not found: ' + filePath);
     }
 });
 
 app.get('/AdminPage/:file', (req, res) => {
     const filePath = path.join(frontendPath, 'AdminPage', req.params.file);
+    console.log('AdminPage request for:', req.params.file, '-> checking:', filePath);
     if (fs.existsSync(filePath)) {
         res.sendFile(filePath);
     } else {
-        res.status(404).send('Not found');
+        res.status(404).send('Not found: ' + filePath);
     }
 });
 
 app.get('/ProgramHeadPage/:file', (req, res) => {
     const filePath = path.join(frontendPath, 'ProgramHeadPage', req.params.file);
+    console.log('ProgramHeadPage request for:', req.params.file, '-> checking:', filePath);
     if (fs.existsSync(filePath)) {
         res.sendFile(filePath);
     } else {
-        res.status(404).send('Not found');
+        res.status(404).send('Not found: ' + filePath);
     }
 });
 
 app.get('/StudentPage/:file', (req, res) => {
     const filePath = path.join(frontendPath, 'StudentPage', req.params.file);
+    console.log('StudentPage request for:', req.params.file, '-> checking:', filePath);
     if (fs.existsSync(filePath)) {
         res.sendFile(filePath);
     } else {
-        res.status(404).send('Not found');
+        res.status(404).send('Not found: ' + filePath);
     }
 });
 
 app.get('/RegisterPage/:file', (req, res) => {
     const filePath = path.join(frontendPath, 'RegisterPage', req.params.file);
+    console.log('RegisterPage request for:', req.params.file, '-> checking:', filePath);
     if (fs.existsSync(filePath)) {
         res.sendFile(filePath);
     } else {
-        res.status(404).send('Not found');
+        res.status(404).send('Not found: ' + filePath);
     }
 });
 
