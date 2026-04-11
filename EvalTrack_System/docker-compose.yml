@@ -1,0 +1,16 @@
+version: "3.8"
+
+services:
+  server:
+    build: ./server
+    ports:
+      - "3000:3000"
+    working_dir: /app
+    command: sh -c "npm install && npm start"
+
+  client:
+    build: ./client
+    ports:
+      - "5173:5173"
+    working_dir: /app
+    command: sh -c "npm install && npm run dev"
